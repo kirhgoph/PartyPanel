@@ -1,11 +1,10 @@
-﻿using PartyPanelShared;
-using PartyPanelShared.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using PartyPanel.Shared;
 
 namespace PartyPanelUI.Network
 {
@@ -31,7 +30,7 @@ namespace PartyPanelUI.Network
         private int port;
         private Random rand = new Random();
 
-        private static ManualResetEvent accpeting = new ManualResetEvent(false);
+        private static ManualResetEvent accepting = new ManualResetEvent(false);
 
         public Server(int port)
         {
@@ -51,21 +50,21 @@ namespace PartyPanelUI.Network
             while (Enabled)
             {
                 // Set the event to nonsignaled state.  
-                accpeting.Reset();
+                accepting.Reset();
 
                 // Start an asynchronous socket to listen for connections.  
-                Logger.Debug("Waiting for a connection...");
+                PPLogger.Debug("Waiting for a connection...");
                 server.BeginAccept(new AsyncCallback(AcceptCallback), server);
 
                 // Wait until a connection is made before continuing.  
-                accpeting.WaitOne();
+                accepting.WaitOne();
             }
         }
 
         public void AcceptCallback(IAsyncResult ar)
         {
             // Signal the main thread to continue.  
-            accpeting.Set();
+            accepting.Set();
 
             try
             {
@@ -87,7 +86,7 @@ namespace PartyPanelUI.Network
             }
             catch (Exception e)
             {
-                Logger.Debug(e.ToString());
+                PPLogger.Debug(e.ToString());
             }
         }
 
@@ -130,7 +129,7 @@ namespace PartyPanelUI.Network
             }
             catch (Exception e)
             {
-                Logger.Debug(e.ToString());
+                PPLogger.Debug(e.ToString());
                 PlayerDisconnected_Internal(player);
             }
         }
@@ -164,7 +163,7 @@ namespace PartyPanelUI.Network
             }
             catch (Exception e)
             {
-                Logger.Debug(e.ToString());
+                PPLogger.Debug(e.ToString());
                 PlayerDisconnected_Internal(player);
             }
         }
@@ -183,7 +182,7 @@ namespace PartyPanelUI.Network
             }
             catch (Exception e)
             {
-                Logger.Debug(e.ToString());
+                PPLogger.Debug(e.ToString());
                 PlayerDisconnected_Internal(player);
             }
         }

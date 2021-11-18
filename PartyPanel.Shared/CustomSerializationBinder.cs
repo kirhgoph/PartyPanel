@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
  * PartyPanel.exe
  */
 
-namespace PartyPanelShared
+namespace PartyPanel.Shared
 {
     class CustomSerializationBinder : SerializationBinder
     {

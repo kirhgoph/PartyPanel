@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartyPanel", "PartyPanel\Pa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartyPanelUI", "PartyPanelUI\PartyPanelUI.csproj", "{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartyPanel.Shared", "PartyPanel.Shared\PartyPanel.Shared.csproj", "{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

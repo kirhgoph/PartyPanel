@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace PartyPanelShared.Models
+namespace PartyPanel.Shared.Models
 {
     [Serializable]
-    public class Characteristic
+    public class PPCharacteristic
     {
         public enum BeatmapDifficulty
         {

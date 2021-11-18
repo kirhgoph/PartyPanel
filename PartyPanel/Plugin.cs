@@ -1,10 +1,10 @@
-﻿using IPA;
+﻿using System.Collections.Concurrent;
+using IPA;
 using SongCore;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Logger = PartyPanelShared.Logger;
 
 /*
  * Created by Moon on 11/12/2018
@@ -15,7 +15,8 @@ using Logger = PartyPanelShared.Logger;
 
 namespace PartyPanel
 {
-    public class Plugin : IBeatSaberPlugin
+    [Plugin(RuntimeOptions.SingleStartInit)]
+    public class Plugin
     {
         public string Name => "PartyPanel";
         public string Version => "0.0.1";
@@ -25,31 +26,30 @@ namespace PartyPanel
         private BeatmapLevelCollectionSO _secondaryLevelCollection;
         private BeatmapLevelCollectionSO _tertiaryLevelCollection;
         private BeatmapLevelCollectionSO _extrasLevelCollection;
-
+        
         public static List<IPreviewBeatmapLevel> masterLevelList;
 
         private Client client;
 
+        [Init]
         public void OnApplicationStart()
         {
             client = new Client();
             client.Start();
 
-            Loader.SongsLoadedEvent += (Loader _, Dictionary<string, CustomPreviewBeatmapLevel> __) =>
+            Loader.SongsLoadedEvent += (Loader l, ConcurrentDictionary<string, CustomPreviewBeatmapLevel> d) =>
             {
                 if (_alwaysOwnedContent == null) _alwaysOwnedContent = Resources.FindObjectsOfTypeAll<AlwaysOwnedContentSO>().First();
-                if (_primaryLevelCollection == null) _primaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[0].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
-                if (_secondaryLevelCollection == null) _secondaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[1].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
-                if (_tertiaryLevelCollection == null) _tertiaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[2].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
-                if (_extrasLevelCollection == null) _extrasLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[3].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
-
+                // if (_primaryLevelCollection == null) _primaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[0].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
+                // if (_secondaryLevelCollection == null) _secondaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[1].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
+                // if (_tertiaryLevelCollection == null) _tertiaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[2].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
+                // if (_extrasLevelCollection == null) _extrasLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[3].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
+                
                 masterLevelList = new List<IPreviewBeatmapLevel>();
-                masterLevelList.AddRange(_primaryLevelCollection.beatmapLevels);
-                masterLevelList.AddRange(_secondaryLevelCollection.beatmapLevels);
-                masterLevelList.AddRange(_tertiaryLevelCollection.beatmapLevels);
-                masterLevelList.AddRange(_extrasLevelCollection.beatmapLevels);
-                masterLevelList.AddRange(Loader.CustomLevelsCollection.beatmapLevels);
-
+                //masterLevelList.AddRange(_primaryLevelCollection.beatmapLevels);
+                masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.ostAndExtrasPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
+                masterLevelList.AddRange(Loader.CustomLevelsCollection?.beatmapLevels ?? new IPreviewBeatmapLevel[0]);
+                
                 client.SendSongList(masterLevelList);
             };
         }

@@ -1,9 +1,9 @@
-﻿using PartyPanelShared;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using PartyPanel.Shared;
 
 namespace PartyPanel.Network
 {
@@ -72,7 +72,7 @@ namespace PartyPanel.Network
             }
             catch (Exception e)
             {
-                Logger.Debug(e.ToString());
+                PPLogger.Debug(e.ToString());
             }
         }
 
@@ -115,7 +115,7 @@ namespace PartyPanel.Network
             }
             catch (Exception e)
             {
-                Logger.Debug(e.ToString());
+                PPLogger.Debug(e.ToString());
                 ServerDisconnected_Internal();
             }
         }
@@ -137,7 +137,7 @@ namespace PartyPanel.Network
             }
             catch (Exception e)
             {
-                Logger.Debug(e.ToString());
+                PPLogger.Debug(e.ToString());
                 ServerDisconnected_Internal();
             }
         }

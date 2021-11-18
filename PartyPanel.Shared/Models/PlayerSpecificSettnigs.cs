@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace PartyPanelShared.Models
+namespace PartyPanel.Shared.Models
 {
     [Serializable]
-    public class PlayerSpecificSettings
+    public class PPPlayerSpecificSettings
     {
         public bool leftHanded;
         public bool staticLights;

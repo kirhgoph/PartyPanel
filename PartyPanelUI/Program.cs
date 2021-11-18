@@ -3,15 +3,15 @@ using System.Windows.Forms;
 
 namespace PartyPanelUI
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
-            PartyPanel panel = new PartyPanel();
+            PartyPanelUI panelUi = new PartyPanelUI();
 
-            new Thread(() => new Server(panel).Start()).Start();
+            new Thread(() => new PartyPanel(panelUi).Start()).Start();
 
-            Application.Run(panel);
+            Application.Run(panelUi);
         }
     }
 }

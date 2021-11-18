@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PartyPanelShared.Models
+namespace PartyPanel.Shared.Models.Packets
 {
     [Serializable]
     public class Command

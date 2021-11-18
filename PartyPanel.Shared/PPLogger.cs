@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace PartyPanelShared
+namespace PartyPanel.Shared
 {
-    class Logger
+    public class PPLogger
     {
         private static string prefix = $"[PartyPanel]: ";
 

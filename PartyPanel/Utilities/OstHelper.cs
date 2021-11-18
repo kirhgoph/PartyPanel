@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace PartyPanel
+namespace PartyPanel.Utilities
 {
     class OstHelper
     {
