@@ -42,7 +42,7 @@ namespace PartyPanel.Shared
         {
 #if DEBUG
             ConsoleColor originalColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(prefix + message);
             Console.ForegroundColor = originalColor;
 #endif

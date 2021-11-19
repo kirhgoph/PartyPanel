@@ -5,4 +5,8 @@
         <RootNamespace>PartyPanel.Shared</RootNamespace>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Content Include="PartyPanel.Shared.csproj.user" />
+    </ItemGroup>
+
 </Project>
