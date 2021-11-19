@@ -36,9 +36,11 @@
   <ItemGroup>
     <Reference Include="BeatmapCore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\BeatmapCore.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Colors, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\Colors.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>H:\SteamLibrary\steamapps\common\Beat Saber\\Beat Saber_Data\Managed\Core.dll</HintPath>
@@ -46,6 +48,7 @@
     </Reference>
     <Reference Include="GameplayCore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\GameplayCore.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="HMLib, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>H:\SteamLibrary\steamapps\common\Beat Saber\\Beat Saber_Data\Managed\HMLib.dll</HintPath>
@@ -87,7 +90,7 @@
     </Reference>
     <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />

@@ -44,7 +44,7 @@ namespace PartyPanel
             try
             {
                 client = new Network.Client(10155);
-                client.PacketRecieved += Client_PacketRecieved;
+                //client.PacketRecieved += Client_PacketRecieved;
                 client.ServerDisconnected += Client_ServerDisconnected;
                 client.Start();
 
@@ -101,77 +101,77 @@ namespace PartyPanel
             else PPLogger.Debug("Skipped sending songs because there is no server connected");
         }
 
-        private void Client_PacketRecieved(Packet packet)
-        {
-            if (packet.Type == PacketType.PlaySong)
-            {
-                PlaySong playSong = packet.SpecificPacket as PlaySong;
-        
-                var desiredLevel = Plugin.masterLevelList.First(x => x.levelID == playSong.levelId);
-                var desiredCharacteristic = Loader.beatmapCharacteristicCollection.beatmapCharacteristics.First(x => x.serializedName == playSong.ppCharacteristic.SerializedName);
-                //var desiredCharacteristic = Loader.beatmapCharacteristicCollection.beatmapCharacteristics.First(x => x.serializedName == playSong.ppCharacteristic.SerializedName);
-                var desiredDifficulty = (BeatmapDifficulty)playSong.difficulty;
-        
-                var playerSpecificSettings = new PlayerSpecificSettings();
-                // playerSpecificSettings.advancedHud = playSong.playerSettings.advancedHud;
-                // playerSpecificSettings.leftHanded = playSong.playerSettings.leftHanded;
-                // playerSpecificSettings.noTextsAndHuds = playSong.playerSettings.noTextsAndHuds;
-                // playerSpecificSettings.reduceDebris = playSong.playerSettings.reduceDebris;
-                //playerSpecificSettings.staticLights = playSong.playerSettings.staticLights;
-        
-                var gameplayModifiers = new GameplayModifiers();
-                // gameplayModifiers.batteryEnergy = playSong.gameplayModifiers.batteryEnergy;
-                // gameplayModifiers.disappearingArrows = playSong.gameplayModifiers.disappearingArrows;
-                // gameplayModifiers.failOnSaberClash = playSong.gameplayModifiers.failOnSaberClash;
-                // gameplayModifiers.fastNotes = playSong.gameplayModifiers.fastNotes;
-                // gameplayModifiers.ghostNotes = playSong.gameplayModifiers.ghostNotes;
-                // gameplayModifiers.instaFail = playSong.gameplayModifiers.instaFail;
-                // gameplayModifiers.noBombs = playSong.gameplayModifiers.noBombs;
-                // gameplayModifiers.noFail = playSong.gameplayModifiers.noFail;
-                // gameplayModifiers.noObstacles = playSong.gameplayModifiers.noObstacles;
-                // gameplayModifiers.songSpeed = (GameplayModifiers.SongSpeed)playSong.gameplayModifiers.songSpeed;
-        
-                SaberUtilities.PlaySong(desiredLevel, desiredCharacteristic, desiredDifficulty, gameplayModifiers, playerSpecificSettings);
-            }
-            // else if (packet.Type == PacketType.LoadSong)
-            // {
-            //     LoadSong loadSong = packet.SpecificPacket as LoadSong;
-            //
-            //     Action<IBeatmapLevel> SongLoaded = (loadedLevel) =>
-            //     {
-            //         var loadedSong = new LoadedSong();
-            //         var beatmapLevel = new PPPreviewBeatmapLevel();
-            //         beatmapLevel.Characteristics = loadedLevel.beatmapLevelData.difficultyBeatmapSets.Select(x => x.beatmapCharacteristic).Select(x => {
-            //             var characteristic = new PPCharacteristic();
-            //             characteristic.SerializedName = x.serializedName;
-            //             characteristic.difficulties =
-            //                 loadedLevel.beatmapLevelData.difficultyBeatmapSets
-            //                     .First(y => y.beatmapCharacteristic.serializedName == x.serializedName)
-            //                     .difficultyBeatmaps.Select(y => (PPCharacteristic.BeatmapDifficulty)y.difficulty).ToArray();
-            //
-            //             return characteristic;
-            //         }).ToArray();
-            //
-            //         beatmapLevel.LevelId = loadedLevel.levelID;
-            //         beatmapLevel.Name = loadedLevel.songName;
-            //         beatmapLevel.Loaded = true;
-            //
-            //         loadedSong.level = beatmapLevel;
-            //
-            //         client.Send(new Packet(loadedSong).ToBytes());
-            //     };
-            //
-            //     LoadSong(loadSong.levelId, SongLoaded);
-            // }
-            else if (packet.Type == PacketType.Command)
-            {
-                Command command = packet.SpecificPacket as Command;
-                if (command.commandType == Command.CommandType.ReturnToMenu)
-                {
-                    SaberUtilities.ReturnToMenu();
-                }
-            }
-        }
+        // private void Client_PacketRecieved(Packet packet)
+        // {
+        //     if (packet.Type == PacketType.PlaySong)
+        //     {
+        //         PlaySong playSong = packet.SpecificPacket as PlaySong;
+        //
+        //         var desiredLevel = Plugin.masterLevelList.First(x => x.levelID == playSong.levelId);
+        //         var desiredCharacteristic = Loader.beatmapCharacteristicCollection.beatmapCharacteristics.First(x => x.serializedName == playSong.ppCharacteristic.SerializedName);
+        //         //var desiredCharacteristic = Loader.beatmapCharacteristicCollection.beatmapCharacteristics.First(x => x.serializedName == playSong.ppCharacteristic.SerializedName);
+        //         var desiredDifficulty = (BeatmapDifficulty)playSong.difficulty;
+        //
+        //         var playerSpecificSettings = new PlayerSpecificSettings();
+        //         // playerSpecificSettings.advancedHud = playSong.playerSettings.advancedHud;
+        //         // playerSpecificSettings.leftHanded = playSong.playerSettings.leftHanded;
+        //         // playerSpecificSettings.noTextsAndHuds = playSong.playerSettings.noTextsAndHuds;
+        //         // playerSpecificSettings.reduceDebris = playSong.playerSettings.reduceDebris;
+        //         //playerSpecificSettings.staticLights = playSong.playerSettings.staticLights;
+        //
+        //         var gameplayModifiers = new GameplayModifiers();
+        //         // gameplayModifiers.batteryEnergy = playSong.gameplayModifiers.batteryEnergy;
+        //         // gameplayModifiers.disappearingArrows = playSong.gameplayModifiers.disappearingArrows;
+        //         // gameplayModifiers.failOnSaberClash = playSong.gameplayModifiers.failOnSaberClash;
+        //         // gameplayModifiers.fastNotes = playSong.gameplayModifiers.fastNotes;
+        //         // gameplayModifiers.ghostNotes = playSong.gameplayModifiers.ghostNotes;
+        //         // gameplayModifiers.instaFail = playSong.gameplayModifiers.instaFail;
+        //         // gameplayModifiers.noBombs = playSong.gameplayModifiers.noBombs;
+        //         // gameplayModifiers.noFail = playSong.gameplayModifiers.noFail;
+        //         // gameplayModifiers.noObstacles = playSong.gameplayModifiers.noObstacles;
+        //         // gameplayModifiers.songSpeed = (GameplayModifiers.SongSpeed)playSong.gameplayModifiers.songSpeed;
+        //
+        //         SaberUtilities.PlaySong(desiredLevel, desiredCharacteristic, desiredDifficulty, gameplayModifiers, playerSpecificSettings);
+        //     }
+        //     // else if (packet.Type == PacketType.LoadSong)
+        //     // {
+        //     //     LoadSong loadSong = packet.SpecificPacket as LoadSong;
+        //     //
+        //     //     Action<IBeatmapLevel> SongLoaded = (loadedLevel) =>
+        //     //     {
+        //     //         var loadedSong = new LoadedSong();
+        //     //         var beatmapLevel = new PPPreviewBeatmapLevel();
+        //     //         beatmapLevel.Characteristics = loadedLevel.beatmapLevelData.difficultyBeatmapSets.Select(x => x.beatmapCharacteristic).Select(x => {
+        //     //             var characteristic = new PPCharacteristic();
+        //     //             characteristic.SerializedName = x.serializedName;
+        //     //             characteristic.difficulties =
+        //     //                 loadedLevel.beatmapLevelData.difficultyBeatmapSets
+        //     //                     .First(y => y.beatmapCharacteristic.serializedName == x.serializedName)
+        //     //                     .difficultyBeatmaps.Select(y => (PPCharacteristic.BeatmapDifficulty)y.difficulty).ToArray();
+        //     //
+        //     //             return characteristic;
+        //     //         }).ToArray();
+        //     //
+        //     //         beatmapLevel.LevelId = loadedLevel.levelID;
+        //     //         beatmapLevel.Name = loadedLevel.songName;
+        //     //         beatmapLevel.Loaded = true;
+        //     //
+        //     //         loadedSong.level = beatmapLevel;
+        //     //
+        //     //         client.Send(new Packet(loadedSong).ToBytes());
+        //     //     };
+        //     //
+        //     //     LoadSong(loadSong.levelId, SongLoaded);
+        //     // }
+        //     else if (packet.Type == PacketType.Command)
+        //     {
+        //         Command command = packet.SpecificPacket as Command;
+        //         if (command.commandType == Command.CommandType.ReturnToMenu)
+        //         {
+        //             SaberUtilities.ReturnToMenu();
+        //         }
+        //     }
+        // }
 
         // private async void LoadSong(string levelId, Action<IBeatmapLevel> loadedCallback)
         // {
