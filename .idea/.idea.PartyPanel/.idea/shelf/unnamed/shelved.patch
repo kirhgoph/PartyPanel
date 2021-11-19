@@ -1,0 +1,769 @@
+Index: PartyPanel.Shared/Directory.Build.targets
+===================================================================
+diff --git a/PartyPanel.Shared/Directory.Build.targets b/PartyPanel.Shared/Directory.Build.targets
+deleted file mode 100644
+--- a/PartyPanel.Shared/Directory.Build.targets	(revision 427373dc62a29023372db03639b9f322c13b0fde)
++++ /dev/null	(revision 427373dc62a29023372db03639b9f322c13b0fde)
+@@ -1,101 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<!-- This file contains the build tasks and targets for verifying the manifest, zipping Release builds,
+-     and copying the plugin to to your Beat Saber folder. Only edit this if you know what you are doing. -->
+-<Project>
+-  <PropertyGroup>
+-    <BuildTargetsVersion>2.0</BuildTargetsVersion>
+-    <!--Set this to true if you edit this file to prevent automatic updates-->
+-    <BuildTargetsModified>false</BuildTargetsModified>
+-    <!--Output assembly path without extension-->
+-    <OutputAssemblyName>$(OutputPath)$(AssemblyName)</OutputAssemblyName>
+-    <!--Path to folder to be zipped. Needs to be relative to the project directory to work without changes to the 'BuildForCI' target.-->
+-    <ArtifactDestination>$(OutputPath)Final</ArtifactDestination>
+-    <ErrorOnMismatchedVersions Condition="'$(Configuration)' == 'Release'">True</ErrorOnMismatchedVersions>
+-  </PropertyGroup>
+-  <!--Build Targets-->
+-  <!--Displays a warning if BeatSaberModdingTools.Tasks is not installed.-->
+-  <Target Name="CheckBSMTInstalled" AfterTargets="BeforeBuild" Condition="'$(BSMTTaskAssembly)' == ''">
+-    <Warning Text="The BeatSaberModdingTools.Tasks nuget package doesn't seem to be installed, advanced build targets will not work." />
+-  </Target>
+-  <!--Runs a build task to get info about the project used by later targets.-->
+-  <Target Name="GetProjectInfo" AfterTargets="CheckBSMTInstalled" DependsOnTargets="CheckBSMTInstalled" Condition="'$(BSMTTaskAssembly)' != ''">
+-    <Message Text="Using AssemblyVersion defined in project instead of 'Properties\AssemblyInfo.cs'" Importance="high" Condition="'$(AssemblyVersion)' != ''" />
+-    <GetManifestInfo FailOnError="$(ErrorOnMismatchedVersions)">
+-      <Output TaskParameter="PluginVersion" PropertyName="PluginVersion" />
+-      <Output TaskParameter="BasePluginVersion" PropertyName="BasePluginVersion" />
+-      <Output TaskParameter="GameVersion" PropertyName="GameVersion" />
+-    </GetManifestInfo>
+-    <PropertyGroup>
+-      <AssemblyVersion>$(BasePluginVersion)</AssemblyVersion>
+-      <FileVersion>$(BasePluginVersion)</FileVersion>
+-      <InformationalVersion>$(BasePluginVersion)</InformationalVersion>
+-    </PropertyGroup>
+-    <GetCommitInfo ProjectDir="$(ProjectDir)">
+-      <Output TaskParameter="CommitHash" PropertyName="CommitHash" />
+-      <Output TaskParameter="Branch" PropertyName="Branch" />
+-      <Output TaskParameter="Modified" PropertyName="GitModified" />
+-    </GetCommitInfo>
+-    <PropertyGroup>
+-      <!--Build name for artifact/zip file-->
+-      <ArtifactName>$(AssemblyName)</ArtifactName>
+-      <ArtifactName Condition="'$(PluginVersion)' != ''">$(ArtifactName)-$(PluginVersion)</ArtifactName>
+-      <ArtifactName Condition="'$(GameVersion)' != ''">$(ArtifactName)-bs$(GameVersion)</ArtifactName>
+-      <ArtifactName Condition="'$(CommitHash)' != '' AND '$(CommitHash)' != 'local'">$(ArtifactName)-$(CommitHash)</ArtifactName>
+-    </PropertyGroup>
+-  </Target>
+-  <!--Build target for Continuous Integration builds. Set up for GitHub Actions.-->
+-  <Target Name="BuildForCI" AfterTargets="Build" DependsOnTargets="GetProjectInfo" Condition="'$(ContinuousIntegrationBuild)' == 'True' AND '$(BSMTTaskAssembly)' != ''">
+-    <PropertyGroup>
+-      <!--Set 'ArtifactName' if it failed before.-->
+-      <ArtifactName Condition="'$(ArtifactName)' == ''">$(AssemblyName)</ArtifactName>
+-    </PropertyGroup>
+-    <Message Text="Building for CI" Importance="high" />
+-    <Message Text="PluginVersion: $(PluginVersion), AssemblyVersion: $(AssemblyVersion), GameVersion: $(GameVersion)" Importance="high" />
+-    <Message Text="::set-output name=filename::$(ArtifactName)" Importance="high" />
+-    <Message Text="::set-output name=assemblyname::$(AssemblyName)" Importance="high" />
+-    <Message Text="::set-output name=artifactpath::$(ProjectDir)$(ArtifactDestination)" Importance="high" />
+-    <Message Text="Copying '$(OutputAssemblyName).dll' to '$(ProjectDir)$(ArtifactDestination)\Plugins\$(AssemblyName).dll'" Importance="high" />
+-    <Copy SourceFiles="$(OutputAssemblyName).dll" DestinationFiles="$(ProjectDir)$(ArtifactDestination)\Plugins\$(AssemblyName).dll" />
+-  </Target>
+-  <!--Creates a BeatMods compliant zip file with the release.-->
+-  <Target Name="ZipRelease" AfterTargets="Build" Condition="'$(DisableZipRelease)' != 'True' AND '$(Configuration)' == 'Release' AND '$(BSMTTaskAssembly)' != ''">
+-    <PropertyGroup>
+-      <!--Set 'ArtifactName' if it failed before.-->
+-      <ArtifactName Condition="'$(ArtifactName)' == ''">$(AssemblyName)</ArtifactName>
+-      <DestinationDirectory>$(OutDir)zip\</DestinationDirectory>
+-    </PropertyGroup>
+-    <ItemGroup>
+-      <OldZips Include="$(DestinationDirectory)$(AssemblyName)*.zip"/>
+-    </ItemGroup>
+-    <Copy SourceFiles="$(OutputAssemblyName).dll" DestinationFiles="$(ArtifactDestination)\Plugins\$(AssemblyName).dll" />
+-    <Message Text="PluginVersion: $(PluginVersion), AssemblyVersion: $(AssemblyVersion), GameVersion: $(GameVersion)" Importance="high" />
+-    <Delete Files="@(OldZips)" TreatErrorsAsWarnings="true" ContinueOnError="true" />
+-    <ZipDir SourceDirectory="$(ArtifactDestination)" DestinationFile="$(DestinationDirectory)$(ArtifactName).zip" />
+-  </Target>
+-  <!--Copies the assembly and pdb to the Beat Saber folder.-->
+-  <Target Name="CopyToPlugins" AfterTargets="Build" Condition="'$(DisableCopyToPlugins)' != 'True' AND '$(ContinuousIntegrationBuild)' != 'True'">
+-    <PropertyGroup>
+-      <PluginDir>$(BeatSaberDir)\Plugins</PluginDir>
+-      <CanCopyToPlugins>True</CanCopyToPlugins>
+-      <CopyToPluginsError Condition="!Exists('$(PluginDir)')">Unable to copy assembly to game folder, did you set 'BeatSaberDir' correctly in your 'csproj.user' file? Plugins folder doesn't exist: '$(PluginDir)'.</CopyToPluginsError>
+-      <!--Error if 'BeatSaberDir' does not have 'Beat Saber.exe'-->
+-      <CopyToPluginsError Condition="!Exists('$(BeatSaberDir)\Beat Saber.exe')">Unable to copy to Plugins folder, '$(BeatSaberDir)' does not appear to be a Beat Saber game install.</CopyToPluginsError>
+-      <!--Error if 'BeatSaberDir' is the same as 'LocalRefsDir'-->
+-      <CopyToPluginsError Condition="'$(BeatSaberDir)' == '$(LocalRefsDir)' OR '$(BeatSaberDir)' == ''">Unable to copy to Plugins folder, 'BeatSaberDir' has not been set in your 'csproj.user' file.</CopyToPluginsError>
+-      <CanCopyToPlugins Condition="'$(CopyToPluginsError)' != ''">False</CanCopyToPlugins>
+-    </PropertyGroup>
+-    <!--Check if Beat Saber is running-->
+-    <IsProcessRunning ProcessName="Beat Saber" Condition="'$(BSMTTaskAssembly)' != ''">
+-      <Output TaskParameter="IsRunning" PropertyName="IsRunning" />
+-    </IsProcessRunning>
+-    <PropertyGroup>
+-      <!--If Beat Saber is running, output to the Pending folder-->
+-      <PluginDir Condition="'$(IsRunning)' == 'True'">$(BeatSaberDir)\IPA\Pending\Plugins</PluginDir>
+-    </PropertyGroup>
+-    <Warning Text="$(CopyToPluginsError)" Condition="'$(CopyToPluginsError)' != ''" />
+-    <Message Text="Copying '$(OutputAssemblyName).dll' to '$(PluginDir)'." Importance="high" Condition="$(CanCopyToPlugins)" />
+-    <Copy SourceFiles="$(OutputAssemblyName).dll" DestinationFiles="$(PluginDir)\$(AssemblyName).dll" Condition="$(CanCopyToPlugins)"  />
+-    <Copy SourceFiles="$(OutputAssemblyName).pdb" DestinationFiles="$(PluginDir)\$(AssemblyName).pdb" Condition="'$(CanCopyToPlugins)' == 'True' AND Exists('$(OutputAssemblyName).pdb')"  />
+-    <Warning Text="Beat Saber is running, restart the game to use the latest build." Condition="'$(IsRunning)' == 'True'" />
+-  </Target>
+-</Project>
+\ No newline at end of file
+Index: PartyPanel.Shared/PartyPanel.Shared.csproj
+===================================================================
+diff --git a/PartyPanel.Shared/PartyPanel.Shared.csproj b/PartyPanel.Shared/PartyPanel.Shared.csproj
+deleted file mode 100644
+--- a/PartyPanel.Shared/PartyPanel.Shared.csproj	(revision 427373dc62a29023372db03639b9f322c13b0fde)
++++ /dev/null	(revision 427373dc62a29023372db03639b9f322c13b0fde)
+@@ -1,12 +0,0 @@
+-<Project Sdk="Microsoft.NET.Sdk">
+-
+-    <PropertyGroup>
+-        <TargetFramework>net472</TargetFramework>
+-        <RootNamespace>PartyPanel.Shared</RootNamespace>
+-    </PropertyGroup>
+-
+-    <ItemGroup>
+-      <Content Include="PartyPanel.Shared.csproj.user" />
+-    </ItemGroup>
+-
+-</Project>
+Index: PartyPanel/PartyPanel.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<Project ToolsVersion=\"15.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\r\n  <Import Project=\"..\\packages\\BeatSaberModdingTools.Tasks.1.4.3\\build\\BeatSaberModdingTools.Tasks.props\" Condition=\"Exists('..\\packages\\BeatSaberModdingTools.Tasks.1.4.3\\build\\BeatSaberModdingTools.Tasks.props')\" />\r\n  <Import Project=\"$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props\" Condition=\"Exists('$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props')\" />\r\n  <PropertyGroup>\r\n    <Configuration Condition=\" '$(Configuration)' == '' \">Debug</Configuration>\r\n    <Platform Condition=\" '$(Platform)' == '' \">AnyCPU</Platform>\r\n    <ProjectGuid>{4B165F47-AEAE-4380-B512-CA16A274FC99}</ProjectGuid>\r\n    <OutputType>Library</OutputType>\r\n    <AppDesignerFolder>Properties</AppDesignerFolder>\r\n    <RootNamespace>PartyPanel</RootNamespace>\r\n    <AssemblyName>PartyPanel</AssemblyName>\r\n    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>\r\n    <FileAlignment>512</FileAlignment>\r\n    <TargetFrameworkProfile />\r\n  </PropertyGroup>\r\n  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' \">\r\n    <DebugSymbols>true</DebugSymbols>\r\n    <DebugType>full</DebugType>\r\n    <Optimize>false</Optimize>\r\n    <OutputPath>bin\\Debug\\</OutputPath>\r\n    <DefineConstants>DEBUG;TRACE</DefineConstants>\r\n    <ErrorReport>prompt</ErrorReport>\r\n    <WarningLevel>4</WarningLevel>\r\n    <Prefer32Bit>false</Prefer32Bit>\r\n  </PropertyGroup>\r\n  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' \">\r\n    <DebugType>pdbonly</DebugType>\r\n    <Optimize>true</Optimize>\r\n    <OutputPath>bin\\Release\\</OutputPath>\r\n    <DefineConstants>TRACE</DefineConstants>\r\n    <ErrorReport>prompt</ErrorReport>\r\n    <WarningLevel>4</WarningLevel>\r\n    <Prefer32Bit>false</Prefer32Bit>\r\n  </PropertyGroup>\r\n  <ItemGroup>\r\n    <Reference Include=\"BeatmapCore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\">\r\n      <HintPath>..\\..\\..\\..\\SteamLibrary\\steamapps\\common\\Beat Saber\\Beat Saber_Data\\Managed\\BeatmapCore.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"Colors, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\">\r\n      <HintPath>..\\..\\..\\..\\SteamLibrary\\steamapps\\common\\Beat Saber\\Beat Saber_Data\\Managed\\Colors.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\">\r\n      <HintPath>H:\\SteamLibrary\\steamapps\\common\\Beat Saber\\\\Beat Saber_Data\\Managed\\Core.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"GameplayCore, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\">\r\n      <HintPath>..\\..\\..\\..\\SteamLibrary\\steamapps\\common\\Beat Saber\\Beat Saber_Data\\Managed\\GameplayCore.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"HMLib, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\">\r\n      <HintPath>H:\\SteamLibrary\\steamapps\\common\\Beat Saber\\\\Beat Saber_Data\\Managed\\HMLib.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"IPA.Loader\">\r\n      <HintPath>H:\\SteamLibrary\\steamapps\\common\\Beat Saber\\\\Beat Saber_Data\\Managed\\IPA.Loader.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"Main, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null\">\r\n      <HintPath>H:\\SteamLibrary\\steamapps\\common\\Beat Saber\\\\Beat Saber_Data\\Managed\\Main.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"Microsoft.Build.Framework, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\Microsoft.Build.Framework.16.5.0\\lib\\net472\\Microsoft.Build.Framework.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"Microsoft.Build.Tasks.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\Microsoft.Build.Tasks.Core.16.5.0\\lib\\net472\\Microsoft.Build.Tasks.Core.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"Microsoft.Build.Utilities.Core, Version=15.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\Microsoft.Build.Utilities.Core.16.5.0\\lib\\net472\\Microsoft.Build.Utilities.Core.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"Microsoft.VisualStudio.Setup.Configuration.Interop, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\Microsoft.VisualStudio.Setup.Configuration.Interop.1.16.30\\lib\\net35\\Microsoft.VisualStudio.Setup.Configuration.Interop.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"mscorlib\" />\r\n    <Reference Include=\"SongCore\">\r\n      <HintPath>$(BeatSaberDir)\\Plugins\\SongCore.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"System\" />\r\n    <Reference Include=\"System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51\">\r\n      <HintPath>..\\packages\\System.Buffers.4.4.0\\lib\\netstandard2.0\\System.Buffers.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\System.Collections.Immutable.1.5.0\\lib\\netstandard2.0\\System.Collections.Immutable.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"System.Configuration\" />\r\n    <Reference Include=\"System.Core\" />\r\n    <Reference Include=\"System.Diagnostics.Process, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\System.Diagnostics.Process.4.3.0\\lib\\net461\\System.Diagnostics.Process.dll</HintPath>\r\n      <Private>True</Private>\r\n    </Reference>\r\n    <Reference Include=\"System.Drawing\" />\r\n    <Reference Include=\"System.IO.Compression\" />\r\n    <Reference Include=\"System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51\">\r\n      <HintPath>..\\packages\\System.Memory.4.5.3\\lib\\netstandard2.0\\System.Memory.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"System.Net.Http\" />\r\n    <Reference Include=\"System.Numerics\" />\r\n    <Reference Include=\"System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\System.Numerics.Vectors.4.4.0\\lib\\net46\\System.Numerics.Vectors.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"System.Reflection\" />\r\n    <Reference Include=\"System.Resources.Extensions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51\">\r\n      <HintPath>..\\packages\\System.Resources.Extensions.4.6.0\\lib\\netstandard2.0\\System.Resources.Extensions.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\System.Runtime.CompilerServices.Unsafe.4.5.2\\lib\\netstandard2.0\\System.Runtime.CompilerServices.Unsafe.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"System.Runtime.Serialization\" />\r\n    <Reference Include=\"System.Security\" />\r\n    <Reference Include=\"System.Threading.Tasks.Dataflow, Version=4.6.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a\">\r\n      <HintPath>..\\packages\\System.Threading.Tasks.Dataflow.4.9.0\\lib\\netstandard2.0\\System.Threading.Tasks.Dataflow.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"System.Windows.Forms\" />\r\n    <Reference Include=\"System.Xaml\" />\r\n    <Reference Include=\"System.Xml.Linq\" />\r\n    <Reference Include=\"System.Data.DataSetExtensions\" />\r\n    <Reference Include=\"System.Data\" />\r\n    <Reference Include=\"System.Xml\" />\r\n    <Reference Include=\"UnityEngine\">\r\n      <HintPath>$(BeatSaberDir)\\Beat Saber_Data\\Managed\\UnityEngine.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"UnityEngine.CoreModule\">\r\n      <HintPath>$(BeatSaberDir)\\Beat Saber_Data\\Managed\\UnityEngine.CoreModule.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"UnityEngine.UI\">\r\n      <HintPath>$(BeatSaberDir)\\Beat Saber_Data\\Managed\\UnityEngine.UI.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"UnityEngine.UIElementsModule\">\r\n      <HintPath>$(BeatSaberDir)\\Beat Saber_Data\\Managed\\UnityEngine.UIElementsModule.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"UnityEngine.UIModule\">\r\n      <HintPath>$(BeatSaberDir)\\Beat Saber_Data\\Managed\\UnityEngine.UIModule.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n    <Reference Include=\"UnityEngine.VRModule\">\r\n      <HintPath>$(BeatSaberDir)\\Beat Saber_Data\\Managed\\UnityEngine.VRModule.dll</HintPath>\r\n      <Private>False</Private>\r\n    </Reference>\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <Compile Include=\"Client.cs\" />\r\n    <Compile Include=\"Network\\Client.cs\" />\r\n    <Compile Include=\"Utilities\\OstHelper.cs\" />\r\n    <Compile Include=\"Plugin.cs\" />\r\n    <Compile Include=\"Properties\\AssemblyInfo.cs\" />\r\n    <Compile Include=\"Utilities\\ReflectionUtil.cs\" />\r\n    <Compile Include=\"Utilities\\SaberUtilities.cs\" />\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <EmbeddedResource Include=\"manifest.json\" />\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <None Include=\"Directory.Build.targets\" />\r\n    <Content Include=\"PartyPanel.csproj.user\" />\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <ProjectReference Include=\"..\\PartyPanel.Shared\\PartyPanel.Shared.csproj\">\r\n      <Project>{d54ba577-97db-424e-9b4b-5b2bce34a84a}</Project>\r\n      <Name>PartyPanel.Shared</Name>\r\n    </ProjectReference>\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <None Include=\"packages.config\" />\r\n  </ItemGroup>\r\n  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />\r\n  <Target Name=\"EnsureNuGetPackageBuildImports\" BeforeTargets=\"PrepareForBuild\">\r\n    <PropertyGroup>\r\n      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105.The missing file is {0}.</ErrorText>\r\n    </PropertyGroup>\r\n    <Error Condition=\"!Exists('..\\packages\\BeatSaberModdingTools.Tasks.1.4.3\\build\\BeatSaberModdingTools.Tasks.props')\" Text=\"$([System.String]::Format('$(ErrorText)', '..\\packages\\BeatSaberModdingTools.Tasks.1.4.3\\build\\BeatSaberModdingTools.Tasks.props'))\" />\r\n  </Target>\r\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanel/PartyPanel.csproj b/PartyPanel/PartyPanel.csproj
+--- a/PartyPanel/PartyPanel.csproj	(revision 427373dc62a29023372db03639b9f322c13b0fde)
++++ b/PartyPanel/PartyPanel.csproj	(date 1637360471505)
+@@ -159,6 +159,18 @@
+   <ItemGroup>
+     <Compile Include="Client.cs" />
+     <Compile Include="Network\Client.cs" />
++    <Compile Include="Shared\CustomSerializationBinder.cs" />
++    <Compile Include="Shared\Models\Packets\Command.cs" />
++    <Compile Include="Shared\Models\Packets\LoadedSong.cs" />
++    <Compile Include="Shared\Models\Packets\LoadSong.cs" />
++    <Compile Include="Shared\Models\Packets\PlaySong.cs" />
++    <Compile Include="Shared\Models\Packets\SongList.cs" />
++    <Compile Include="Shared\Models\PlayerSpecificSettnigs.cs" />
++    <Compile Include="Shared\Models\PPCharacteristic.cs" />
++    <Compile Include="Shared\Models\PPGameplayModifiers.cs" />
++    <Compile Include="Shared\Models\PPPreviewBeatmapLevel.cs" />
++    <Compile Include="Shared\Packet.cs" />
++    <Compile Include="Shared\PPLogger.cs" />
+     <Compile Include="Utilities\OstHelper.cs" />
+     <Compile Include="Plugin.cs" />
+     <Compile Include="Properties\AssemblyInfo.cs" />
+@@ -171,12 +183,6 @@
+   <ItemGroup>
+     <None Include="Directory.Build.targets" />
+     <Content Include="PartyPanel.csproj.user" />
+-  </ItemGroup>
+-  <ItemGroup>
+-    <ProjectReference Include="..\PartyPanel.Shared\PartyPanel.Shared.csproj">
+-      <Project>{d54ba577-97db-424e-9b4b-5b2bce34a84a}</Project>
+-      <Name>PartyPanel.Shared</Name>
+-    </ProjectReference>
+   </ItemGroup>
+   <ItemGroup>
+     <None Include="packages.config" />
+Index: PartyPanelUI/PartyPanelUI.csproj
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<Project ToolsVersion=\"15.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">\r\n  <Import Project=\"$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props\" Condition=\"Exists('$(MSBuildExtensionsPath)\\$(MSBuildToolsVersion)\\Microsoft.Common.props')\" />\r\n  <PropertyGroup>\r\n    <Configuration Condition=\" '$(Configuration)' == '' \">Debug</Configuration>\r\n    <Platform Condition=\" '$(Platform)' == '' \">AnyCPU</Platform>\r\n    <ProjectGuid>{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}</ProjectGuid>\r\n    <OutputType>Exe</OutputType>\r\n    <RootNamespace>PartyPanelUI</RootNamespace>\r\n    <AssemblyName>PartyPanelUI</AssemblyName>\r\n    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>\r\n    <FileAlignment>512</FileAlignment>\r\n    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>\r\n    <Deterministic>true</Deterministic>\r\n  </PropertyGroup>\r\n  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' \">\r\n    <PlatformTarget>AnyCPU</PlatformTarget>\r\n    <DebugSymbols>true</DebugSymbols>\r\n    <DebugType>full</DebugType>\r\n    <Optimize>false</Optimize>\r\n    <OutputPath>bin\\Debug\\</OutputPath>\r\n    <DefineConstants>DEBUG;TRACE</DefineConstants>\r\n    <ErrorReport>prompt</ErrorReport>\r\n    <WarningLevel>4</WarningLevel>\r\n  </PropertyGroup>\r\n  <PropertyGroup Condition=\" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' \">\r\n    <PlatformTarget>AnyCPU</PlatformTarget>\r\n    <DebugType>pdbonly</DebugType>\r\n    <Optimize>true</Optimize>\r\n    <OutputPath>bin\\Release\\</OutputPath>\r\n    <DefineConstants>TRACE</DefineConstants>\r\n    <ErrorReport>prompt</ErrorReport>\r\n    <WarningLevel>4</WarningLevel>\r\n  </PropertyGroup>\r\n  <ItemGroup>\r\n    <Reference Include=\"System\" />\r\n    <Reference Include=\"System.Core\" />\r\n    <Reference Include=\"System.Drawing\" />\r\n    <Reference Include=\"System.Windows.Forms\" />\r\n    <Reference Include=\"System.Xml.Linq\" />\r\n    <Reference Include=\"System.Data.DataSetExtensions\" />\r\n    <Reference Include=\"Microsoft.CSharp\" />\r\n    <Reference Include=\"System.Data\" />\r\n    <Reference Include=\"System.Net.Http\" />\r\n    <Reference Include=\"System.Xml\" />\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <Compile Include=\"Network\\Server.cs\" />\r\n    <Compile Include=\"PartyPanelUI.cs\">\r\n      <SubType>Form</SubType>\r\n    </Compile>\r\n    <Compile Include=\"PartyPanelUI.Designer.cs\">\r\n      <DependentUpon>PartyPanelUI.cs</DependentUpon>\r\n    </Compile>\r\n    <Compile Include=\"Program.cs\" />\r\n    <Compile Include=\"Properties\\AssemblyInfo.cs\" />\r\n    <Compile Include=\"PartyPanel.cs\" />\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <None Include=\"App.config\" />\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <EmbeddedResource Include=\"PartyPanelUI.resx\">\r\n      <DependentUpon>PartyPanelUI.cs</DependentUpon>\r\n    </EmbeddedResource>\r\n  </ItemGroup>\r\n  <ItemGroup>\r\n    <ProjectReference Include=\"..\\PartyPanel.Shared\\PartyPanel.Shared.csproj\">\r\n      <Project>{d54ba577-97db-424e-9b4b-5b2bce34a84a}</Project>\r\n      <Name>PartyPanel.Shared</Name>\r\n    </ProjectReference>\r\n  </ItemGroup>\r\n  <Import Project=\"$(MSBuildToolsPath)\\Microsoft.CSharp.targets\" />\r\n</Project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/PartyPanelUI.csproj b/PartyPanelUI/PartyPanelUI.csproj
+--- a/PartyPanelUI/PartyPanelUI.csproj	(revision 427373dc62a29023372db03639b9f322c13b0fde)
++++ b/PartyPanelUI/PartyPanelUI.csproj	(date 1637360466335)
+@@ -55,6 +55,18 @@
+     <Compile Include="Program.cs" />
+     <Compile Include="Properties\AssemblyInfo.cs" />
+     <Compile Include="PartyPanel.cs" />
++    <Compile Include="Shared\CustomSerializationBinder.cs" />
++    <Compile Include="Shared\Models\Packets\Command.cs" />
++    <Compile Include="Shared\Models\Packets\LoadedSong.cs" />
++    <Compile Include="Shared\Models\Packets\LoadSong.cs" />
++    <Compile Include="Shared\Models\Packets\PlaySong.cs" />
++    <Compile Include="Shared\Models\Packets\SongList.cs" />
++    <Compile Include="Shared\Models\PlayerSpecificSettnigs.cs" />
++    <Compile Include="Shared\Models\PPCharacteristic.cs" />
++    <Compile Include="Shared\Models\PPGameplayModifiers.cs" />
++    <Compile Include="Shared\Models\PPPreviewBeatmapLevel.cs" />
++    <Compile Include="Shared\Packet.cs" />
++    <Compile Include="Shared\PPLogger.cs" />
+   </ItemGroup>
+   <ItemGroup>
+     <None Include="App.config" />
+@@ -63,12 +75,6 @@
+     <EmbeddedResource Include="PartyPanelUI.resx">
+       <DependentUpon>PartyPanelUI.cs</DependentUpon>
+     </EmbeddedResource>
+-  </ItemGroup>
+-  <ItemGroup>
+-    <ProjectReference Include="..\PartyPanel.Shared\PartyPanel.Shared.csproj">
+-      <Project>{d54ba577-97db-424e-9b4b-5b2bce34a84a}</Project>
+-      <Name>PartyPanel.Shared</Name>
+-    </ProjectReference>
+   </ItemGroup>
+   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+ </Project>
+\ No newline at end of file
+Index: PartyPanelUI/Shared/PPLogger.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/PPLogger.cs b/PartyPanelUI/Shared/PPLogger.cs
+new file mode 100644
+--- /dev/null	(date 1637351363850)
++++ b/PartyPanelUI/Shared/PPLogger.cs	(date 1637351363850)
+@@ -0,0 +1,51 @@
++using System;
++
++namespace PartyPanel.Shared
++{
++    public class PPLogger
++    {
++        private static string prefix = $"[PartyPanel]: ";
++
++        public static void Error(string message)
++        {
++            ConsoleColor originalColor = Console.ForegroundColor;
++            Console.ForegroundColor = ConsoleColor.Red;
++            Console.WriteLine(prefix + message);
++            Console.ForegroundColor = originalColor;
++        }
++
++        public static void Warning(string message)
++        {
++            ConsoleColor originalColor = Console.ForegroundColor;
++            Console.ForegroundColor = ConsoleColor.Yellow;
++            Console.WriteLine(prefix + message);
++            Console.ForegroundColor = originalColor;
++        }
++
++        public static void Info(string message)
++        {
++            ConsoleColor originalColor = Console.ForegroundColor;
++            Console.ForegroundColor = ConsoleColor.White;
++            Console.WriteLine(prefix + message);
++            Console.ForegroundColor = originalColor;
++        }
++
++        public static void Success(string message)
++        {
++            ConsoleColor originalColor = Console.ForegroundColor;
++            Console.ForegroundColor = ConsoleColor.Green;
++            Console.WriteLine(prefix + message);
++            Console.ForegroundColor = originalColor;
++        }
++
++        public static void Debug(string message)
++        {
++#if DEBUG
++            ConsoleColor originalColor = Console.ForegroundColor;
++            Console.ForegroundColor = ConsoleColor.Cyan;
++            Console.WriteLine(prefix + message);
++            Console.ForegroundColor = originalColor;
++#endif
++        }
++    }
++}
+Index: PartyPanelUI/Shared/Models/Packets/SongList.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/Packets/SongList.cs b/PartyPanelUI/Shared/Models/Packets/SongList.cs
+new file mode 100644
+--- /dev/null	(date 1637260814585)
++++ b/PartyPanelUI/Shared/Models/Packets/SongList.cs	(date 1637260814585)
+@@ -0,0 +1,10 @@
++using System;
++
++namespace PartyPanel.Shared.Models.Packets
++{
++    [Serializable]
++    public class SongList
++    {
++        public PPPreviewBeatmapLevel[] Levels { get; set; }
++    }
++}
+Index: PartyPanelUI/Shared/Packet.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Packet.cs b/PartyPanelUI/Shared/Packet.cs
+new file mode 100644
+--- /dev/null	(date 1637002718367)
++++ b/PartyPanelUI/Shared/Packet.cs	(date 1637002718367)
+@@ -0,0 +1,152 @@
++using System;
++using System.IO;
++using System.Linq;
++using System.Runtime.Serialization.Formatters.Binary;
++using System.Text;
++
++namespace PartyPanel.Shared
++{
++    public enum PacketType
++    {
++        SongList,
++        Command,
++        LoadSong,
++        LoadedSong,
++        PlaySong
++    }
++
++    public class Packet
++    {
++        //Size of the header, the info we need to parse the specific packet
++        // 4x byte - "moon"
++        // int - packet type
++        // int - packet size
++        public const int packetHeaderSize = (sizeof(int) * 2) + (sizeof(byte) * 4);
++
++        public int Size { get; set; }
++        public PacketType Type { get; set; }
++
++        public object SpecificPacket { get; set; }
++
++        public Packet(object specificPacket)
++        {
++            //Assign type based on parameter type
++            Type = (PacketType)Enum.Parse(typeof(PacketType), specificPacket.GetType().Name);
++
++            SpecificPacket = specificPacket;
++        }
++
++        public byte[] ToBytes()
++        {
++            byte[] specificPacketBytes = null;
++
++            using (var memoryStream = new MemoryStream())
++            {
++                BinaryFormatter binaryFormatter = new BinaryFormatter();
++                binaryFormatter.Binder = new CustomSerializationBinder();
++                binaryFormatter.Serialize(memoryStream, SpecificPacket);
++                specificPacketBytes = memoryStream.ToArray();
++            }
++
++            var magicFlag = Encoding.UTF8.GetBytes("moon");
++            var typeBytes = BitConverter.GetBytes((int)Type);
++            var sizeBytes = BitConverter.GetBytes(specificPacketBytes.Length);
++
++            return Combine(magicFlag, typeBytes, sizeBytes, specificPacketBytes);
++        }
++
++        public string ToBase64() => Convert.ToBase64String(ToBytes());
++
++        public static Packet FromBytes(byte[] bytes) => FromStream(new MemoryStream(bytes));
++
++        public static Packet FromStream(MemoryStream stream)
++        {
++            var typeBytes = new byte[sizeof(int)];
++            var sizeBytes = new byte[sizeof(int)];
++
++            //Verify that this is indeed a Packet
++            if (!StreamIsAtPacket(stream, false))
++            {
++                stream.Seek(-(sizeof(byte) * 4), SeekOrigin.Current); //Return to original position in stream
++                return null;
++            }
++
++            stream.Read(typeBytes, 0, sizeof(int));
++            stream.Read(sizeBytes, 0, sizeof(int));
++
++            var specificPacketSize = BitConverter.ToInt32(sizeBytes, 0);
++            object specificPacket = null;
++
++            //There needn't mecessarily be a specific packet for every packet (acks)
++            if (specificPacketSize > 0)
++            {
++                var specificPacketBytes = new byte[specificPacketSize];
++
++                stream.Read(specificPacketBytes, 0, specificPacketBytes.Length);
++
++                using (var memStream = new MemoryStream())
++                {
++                    memStream.Write(specificPacketBytes, 0, specificPacketBytes.Length);
++                    memStream.Seek(0, SeekOrigin.Begin);
++
++                    BinaryFormatter binaryFormatter = new BinaryFormatter();
++                    binaryFormatter.Binder = new CustomSerializationBinder();
++                    specificPacket = binaryFormatter.Deserialize(memStream);
++                }
++            }
++
++            return new Packet(specificPacket)
++            {
++                Size = specificPacketSize,
++                Type = (PacketType)BitConverter.ToInt32(typeBytes, 0)
++            };
++        }
++
++        public static bool StreamIsAtPacket(byte[] bytes, bool resetStreamPos = true) => StreamIsAtPacket(new MemoryStream(bytes), resetStreamPos);
++        public static bool StreamIsAtPacket(MemoryStream stream, bool resetStreamPos = true)
++        {
++            var magicFlagBytes = new byte[sizeof(byte) * 4];
++
++            //Verify that this is indeed a Packet
++            stream.Read(magicFlagBytes, 0, sizeof(byte) * 4);
++
++            if (resetStreamPos) stream.Seek(-(sizeof(byte) * 4), SeekOrigin.Current); //Return to original position in stream
++
++            return Encoding.UTF8.GetString(magicFlagBytes) == "moon";
++        }
++
++        public static bool PotentiallyValidPacket(byte[] bytes)
++        {
++            var stream = new MemoryStream(bytes);
++
++            var typeBytes = new byte[sizeof(int)];
++            var sizeBytes = new byte[sizeof(int)];
++
++            //Verify that this is indeed a Packet
++            if (!StreamIsAtPacket(stream, false))
++            {
++                stream.Seek(-(sizeof(byte) * 4), SeekOrigin.Current); //Return to original position in stream
++                return false;
++            }
++
++            stream.Read(typeBytes, 0, sizeof(int));
++            stream.Read(sizeBytes, 0, sizeof(int));
++
++            stream.Seek(-(sizeof(byte) * 4 + sizeof(int) * 2), SeekOrigin.Current); //Return to original position in stream
++
++            return (BitConverter.ToInt32(sizeBytes, 0) + packetHeaderSize) <= bytes.Length;
++        }
++
++        private static byte[] Combine(params byte[][] arrays)
++        {
++            byte[] rv = new byte[arrays.Sum(a => a.Length)];
++            int offset = 0;
++            foreach (byte[] array in arrays)
++            {
++                Buffer.BlockCopy(array, 0, rv, offset, array.Length);
++                offset += array.Length;
++            }
++            return rv;
++        }
++    }
++}
+Index: PartyPanelUI/Shared/Models/Packets/PlaySong.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/Packets/PlaySong.cs b/PartyPanelUI/Shared/Models/Packets/PlaySong.cs
+new file mode 100644
+--- /dev/null	(date 1637260861753)
++++ b/PartyPanelUI/Shared/Models/Packets/PlaySong.cs	(date 1637260861753)
+@@ -0,0 +1,14 @@
++using System;
++
++namespace PartyPanel.Shared.Models.Packets
++{
++    [Serializable]
++    public class PlaySong
++    {
++        public string levelId;
++        public PPCharacteristic ppCharacteristic;
++        public PPCharacteristic.BeatmapDifficulty difficulty;
++        public PPPlayerSpecificSettings ppPlayerSettings;
++        public PPGameplayModifiers ppGameplayModifiers;
++    }
++}
+Index: PartyPanelUI/Shared/CustomSerializationBinder.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/CustomSerializationBinder.cs b/PartyPanelUI/Shared/CustomSerializationBinder.cs
+new file mode 100644
+--- /dev/null	(date 1636920907526)
++++ b/PartyPanelUI/Shared/CustomSerializationBinder.cs	(date 1636920907526)
+@@ -0,0 +1,29 @@
++using System;
++using System.Runtime.Serialization;
++using System.Runtime.Serialization.Formatters.Binary;
++
++/**
++ * Assembled from https://www.codeproject.com/Tips/1101106/How-to-Serialize-Across-Assemblies-with-the-Binary by Moon on 8/4/2019
++ * The goal here is to enable serialization and deserialization between two different assemblies, ie: PartyPanel.dll and
++ * PartyPanel.exe
++ */
++
++namespace PartyPanel.Shared
++{
++    class CustomSerializationBinder : SerializationBinder
++    {
++        private static SerializationBinder defaultBinder = new BinaryFormatter().Binder;
++
++        public override Type BindToType(string assemblyName, string typeName)
++        {
++            if (assemblyName.Equals("<~>PartyPanel<~>")) return Type.GetType(typeName);
++            else return defaultBinder.BindToType(assemblyName, typeName);
++        }
++
++        public override void BindToName(Type serializedType, out string assemblyName, out string typeName)
++        {
++            assemblyName = "<~>PartyPanel<~>";
++            typeName = serializedType.FullName;
++        }
++    }
++}
+Index: PartyPanelUI/Shared/Models/Packets/LoadSong.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/Packets/LoadSong.cs b/PartyPanelUI/Shared/Models/Packets/LoadSong.cs
+new file mode 100644
+--- /dev/null	(date 1636920907504)
++++ b/PartyPanelUI/Shared/Models/Packets/LoadSong.cs	(date 1636920907504)
+@@ -0,0 +1,10 @@
++using System;
++
++namespace PartyPanel.Shared.Models.Packets
++{
++    [Serializable]
++    public class LoadSong
++    {
++        public string levelId;
++    }
++}
+Index: PartyPanelUI/Shared/Models/PPPreviewBeatmapLevel.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/PPPreviewBeatmapLevel.cs b/PartyPanelUI/Shared/Models/PPPreviewBeatmapLevel.cs
+new file mode 100644
+--- /dev/null	(date 1637260878700)
++++ b/PartyPanelUI/Shared/Models/PPPreviewBeatmapLevel.cs	(date 1637260878700)
+@@ -0,0 +1,17 @@
++using System;
++
++namespace PartyPanel.Shared.Models
++{
++    [Serializable]
++    public class PPPreviewBeatmapLevel
++    {
++        // -- Unloaded levels have the following:
++        public string LevelId { get; set; }
++        public string Name { get; set; }
++
++        // -- Only Loaded levels will have the following:
++        public PPCharacteristic[] Characteristics { get; set; }
++
++        public bool Loaded { get; set; } = false;
++    }
++}
+Index: PartyPanelUI/Shared/Models/Packets/LoadedSong.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/Packets/LoadedSong.cs b/PartyPanelUI/Shared/Models/Packets/LoadedSong.cs
+new file mode 100644
+--- /dev/null	(date 1637260814591)
++++ b/PartyPanelUI/Shared/Models/Packets/LoadedSong.cs	(date 1637260814591)
+@@ -0,0 +1,10 @@
++using System;
++
++namespace PartyPanel.Shared.Models.Packets
++{
++    [Serializable]
++    public class LoadedSong
++    {
++        public PPPreviewBeatmapLevel level;
++    }
++}
+Index: PartyPanelUI/Shared/Models/PPGameplayModifiers.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/PPGameplayModifiers.cs b/PartyPanelUI/Shared/Models/PPGameplayModifiers.cs
+new file mode 100644
+--- /dev/null	(date 1637260878716)
++++ b/PartyPanelUI/Shared/Models/PPGameplayModifiers.cs	(date 1637260878716)
+@@ -0,0 +1,26 @@
++using System;
++
++namespace PartyPanel.Shared.Models
++{
++    [Serializable]
++    public class PPGameplayModifiers
++    {
++        public enum SongSpeed
++        {
++            Normal,
++            Faster,
++            Slower
++        }
++
++        public bool noFail;
++        public bool noBombs;
++        public bool noObstacles;
++        public bool instaFail;
++        public bool failOnSaberClash;
++        public bool batteryEnergy;
++        public bool fastNotes;
++        public SongSpeed songSpeed;
++        public bool disappearingArrows;
++        public bool ghostNotes;
++    }
++}
+Index: PartyPanelUI/Shared/Models/Packets/Command.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/Packets/Command.cs b/PartyPanelUI/Shared/Models/Packets/Command.cs
+new file mode 100644
+--- /dev/null	(date 1636920907519)
++++ b/PartyPanelUI/Shared/Models/Packets/Command.cs	(date 1636920907519)
+@@ -0,0 +1,16 @@
++using System;
++
++namespace PartyPanel.Shared.Models.Packets
++{
++    [Serializable]
++    public class Command
++    {
++        public enum CommandType
++        {
++            Heartbeat,
++            ReturnToMenu
++        }
++
++        public CommandType commandType;
++    }
++}
+Index: PartyPanelUI/Shared/Models/PPCharacteristic.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/PPCharacteristic.cs b/PartyPanelUI/Shared/Models/PPCharacteristic.cs
+new file mode 100644
+--- /dev/null	(date 1637260878730)
++++ b/PartyPanelUI/Shared/Models/PPCharacteristic.cs	(date 1637260878730)
+@@ -0,0 +1,21 @@
++using System;
++
++namespace PartyPanel.Shared.Models
++{
++    [Serializable]
++    public class PPCharacteristic
++    {
++        public enum BeatmapDifficulty
++        {
++            Easy,
++            Normal,
++            Hard,
++            Expert,
++            ExpertPlus
++        }
++
++        public string SerializedName { get; set; }
++
++        public BeatmapDifficulty[] difficulties { get; set; }
++    }
++}
+Index: PartyPanelUI/Shared/Models/PlayerSpecificSettnigs.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanelUI/Shared/Models/PlayerSpecificSettnigs.cs b/PartyPanelUI/Shared/Models/PlayerSpecificSettnigs.cs
+new file mode 100644
+--- /dev/null	(date 1637260878708)
++++ b/PartyPanelUI/Shared/Models/PlayerSpecificSettnigs.cs	(date 1637260878708)
+@@ -0,0 +1,14 @@
++using System;
++
++namespace PartyPanel.Shared.Models
++{
++    [Serializable]
++    public class PPPlayerSpecificSettings
++    {
++        public bool leftHanded;
++        public bool staticLights;
++        public bool noTextsAndHuds;
++        public bool advancedHud;
++        public bool reduceDebris;
++    }
++}
+Index: PartyPanel.sln
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\r\nMicrosoft Visual Studio Solution File, Format Version 12.00\r\n# Visual Studio Version 16\r\nVisualStudioVersion = 16.0.29006.145\r\nMinimumVisualStudioVersion = 10.0.40219.1\r\nProject(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"PartyPanel\", \"PartyPanel\\PartyPanel.csproj\", \"{4B165F47-AEAE-4380-B512-CA16A274FC99}\"\r\nEndProject\r\nProject(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"PartyPanelUI\", \"PartyPanelUI\\PartyPanelUI.csproj\", \"{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}\"\r\nEndProject\r\nProject(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"PartyPanel.Shared\", \"PartyPanel.Shared\\PartyPanel.Shared.csproj\", \"{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}\"\r\nEndProject\r\nGlobal\r\n\tGlobalSection(SolutionConfigurationPlatforms) = preSolution\r\n\t\tDebug|Any CPU = Debug|Any CPU\r\n\t\tRelease|Any CPU = Release|Any CPU\r\n\tEndGlobalSection\r\n\tGlobalSection(ProjectConfigurationPlatforms) = postSolution\r\n\t\t{4B165F47-AEAE-4380-B512-CA16A274FC99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{4B165F47-AEAE-4380-B512-CA16A274FC99}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{4B165F47-AEAE-4380-B512-CA16A274FC99}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{4B165F47-AEAE-4380-B512-CA16A274FC99}.Release|Any CPU.Build.0 = Release|Any CPU\r\n\t\t{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Release|Any CPU.Build.0 = Release|Any CPU\r\n\t\t{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Release|Any CPU.Build.0 = Release|Any CPU\r\n\tEndGlobalSection\r\n\tGlobalSection(SolutionProperties) = preSolution\r\n\t\tHideSolutionNode = FALSE\r\n\tEndGlobalSection\r\n\tGlobalSection(ExtensibilityGlobals) = postSolution\r\n\t\tSolutionGuid = {1A145B10-FEA3-40BC-88AA-08B22298116A}\r\n\tEndGlobalSection\r\nEndGlobal\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/PartyPanel.sln b/PartyPanel.sln
+--- a/PartyPanel.sln	(revision 427373dc62a29023372db03639b9f322c13b0fde)
++++ b/PartyPanel.sln	(date 1637360319298)
+@@ -7,8 +7,6 @@
+ EndProject
+ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartyPanelUI", "PartyPanelUI\PartyPanelUI.csproj", "{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}"
+ EndProject
+-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PartyPanel.Shared", "PartyPanel.Shared\PartyPanel.Shared.csproj", "{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}"
+-EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Any CPU = Debug|Any CPU
+@@ -23,10 +21,6 @@
+ 		{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{11030FEE-9C56-4AEC-BA5F-2D7CB0EBF852}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{D54BA577-97DB-424E-9B4B-5B2BCE34A84A}.Release|Any CPU.Build.0 = Release|Any CPU
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+diff --git a/PartyPanel.Shared/CustomSerializationBinder.cs b/PartyPanel/Shared/CustomSerializationBinder.cs
+rename from PartyPanel.Shared/CustomSerializationBinder.cs
+rename to PartyPanel/Shared/CustomSerializationBinder.cs
+diff --git a/PartyPanel.Shared/PPLogger.cs b/PartyPanel/Shared/PPLogger.cs
+rename from PartyPanel.Shared/PPLogger.cs
+rename to PartyPanel/Shared/PPLogger.cs
+diff --git a/PartyPanel.Shared/Packet.cs b/PartyPanel/Shared/Packet.cs
+rename from PartyPanel.Shared/Packet.cs
+rename to PartyPanel/Shared/Packet.cs
+diff --git a/PartyPanel.Shared/Models/PPCharacteristic.cs b/PartyPanel/Shared/Models/PPCharacteristic.cs
+rename from PartyPanel.Shared/Models/PPCharacteristic.cs
+rename to PartyPanel/Shared/Models/PPCharacteristic.cs
+diff --git a/PartyPanel.Shared/Models/PPGameplayModifiers.cs b/PartyPanel/Shared/Models/PPGameplayModifiers.cs
+rename from PartyPanel.Shared/Models/PPGameplayModifiers.cs
+rename to PartyPanel/Shared/Models/PPGameplayModifiers.cs
+diff --git a/PartyPanel.Shared/Models/PlayerSpecificSettnigs.cs b/PartyPanel/Shared/Models/PlayerSpecificSettnigs.cs
+rename from PartyPanel.Shared/Models/PlayerSpecificSettnigs.cs
+rename to PartyPanel/Shared/Models/PlayerSpecificSettnigs.cs
+diff --git a/PartyPanel.Shared/Models/PPPreviewBeatmapLevel.cs b/PartyPanel/Shared/Models/PPPreviewBeatmapLevel.cs
+rename from PartyPanel.Shared/Models/PPPreviewBeatmapLevel.cs
+rename to PartyPanel/Shared/Models/PPPreviewBeatmapLevel.cs
+diff --git a/PartyPanel.Shared/Models/Packets/Command.cs b/PartyPanel/Shared/Models/Packets/Command.cs
+rename from PartyPanel.Shared/Models/Packets/Command.cs
+rename to PartyPanel/Shared/Models/Packets/Command.cs
+diff --git a/PartyPanel.Shared/Models/Packets/LoadedSong.cs b/PartyPanel/Shared/Models/Packets/LoadedSong.cs
+rename from PartyPanel.Shared/Models/Packets/LoadedSong.cs
+rename to PartyPanel/Shared/Models/Packets/LoadedSong.cs
+diff --git a/PartyPanel.Shared/Models/Packets/LoadSong.cs b/PartyPanel/Shared/Models/Packets/LoadSong.cs
+rename from PartyPanel.Shared/Models/Packets/LoadSong.cs
+rename to PartyPanel/Shared/Models/Packets/LoadSong.cs
+diff --git a/PartyPanel.Shared/Models/Packets/PlaySong.cs b/PartyPanel/Shared/Models/Packets/PlaySong.cs
+rename from PartyPanel.Shared/Models/Packets/PlaySong.cs
+rename to PartyPanel/Shared/Models/Packets/PlaySong.cs
+diff --git a/PartyPanel.Shared/Models/Packets/SongList.cs b/PartyPanel/Shared/Models/Packets/SongList.cs
+rename from PartyPanel.Shared/Models/Packets/SongList.cs
+rename to PartyPanel/Shared/Models/Packets/SongList.cs

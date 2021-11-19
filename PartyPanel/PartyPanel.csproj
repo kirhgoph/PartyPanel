@@ -159,6 +159,18 @@
   <ItemGroup>
     <Compile Include="Client.cs" />
     <Compile Include="Network\Client.cs" />
+    <Compile Include="Shared\CustomSerializationBinder.cs" />
+    <Compile Include="Shared\Models\Packets\Command.cs" />
+    <Compile Include="Shared\Models\Packets\LoadedSong.cs" />
+    <Compile Include="Shared\Models\Packets\LoadSong.cs" />
+    <Compile Include="Shared\Models\Packets\PlaySong.cs" />
+    <Compile Include="Shared\Models\Packets\SongList.cs" />
+    <Compile Include="Shared\Models\PlayerSpecificSettnigs.cs" />
+    <Compile Include="Shared\Models\PPCharacteristic.cs" />
+    <Compile Include="Shared\Models\PPGameplayModifiers.cs" />
+    <Compile Include="Shared\Models\PPPreviewBeatmapLevel.cs" />
+    <Compile Include="Shared\Packet.cs" />
+    <Compile Include="Shared\PPLogger.cs" />
     <Compile Include="Utilities\OstHelper.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -171,12 +183,6 @@
   <ItemGroup>
     <None Include="Directory.Build.targets" />
     <Content Include="PartyPanel.csproj.user" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PartyPanel.Shared\PartyPanel.Shared.csproj">
-      <Project>{d54ba577-97db-424e-9b4b-5b2bce34a84a}</Project>
-      <Name>PartyPanel.Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
