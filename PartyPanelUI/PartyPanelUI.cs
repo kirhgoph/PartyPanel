@@ -12,7 +12,6 @@ namespace PartyPanelUI
     {
         public Label g_searchLabel;
         public TextBox g_searchBox;
-        public TextBox g_runSong;
         public ListView g_songList;
         public CheckBox g_artCheckBox;
         public List<PPPreviewBeatmapLevel> masterLevelList;
@@ -39,7 +38,6 @@ namespace PartyPanelUI
             g_songList.LargeImageList.ImageSize = new System.Drawing.Size(64, 64);
             g_searchLabel = searchLabel;
             g_searchBox = searchBox;
-            g_runSong = runSong;
             g_artCheckBox = artBox;
         }
 
@@ -129,79 +127,43 @@ namespace PartyPanelUI
 
         private void playButton_Click(object sender, EventArgs e)
         {
-            // if (songListView.SelectedItems.Count > 0 && difficultyDropdown.SelectedIndex >= 0)
-            // {
-            //     var playerSettings = new PlayerSpecificSettings();
-            //     playerSettings.leftHanded = mirrorCheckbox.Checked;
-            //     playerSettings.staticLights = staticLightsCheckbox.Checked;
-            //     playerSettings.noTextsAndHuds = noHudCheckbox.Checked;
-            //     playerSettings.advancedHud = advancedHudCheckbox.Checked;
-            //     playerSettings.reduceDebris = reduceDebrisCheckbox.Checked;
-            //
-            //     var modifiers = new GameplayModifiers();
-            //     modifiers.noFail = noFailCheckbox.Checked;
-            //     modifiers.noBombs = noBombsCheckbox.Checked;
-            //     modifiers.noObstacles = noWallsCheckbox.Checked;
-            //     modifiers.instaFail = instaFailCheckbox.Checked && !modifiers.noFail;
-            //     modifiers.failOnSaberClash = failOnClashCheckbox.Checked;
-            //     modifiers.batteryEnergy = batteryEnergyCheckbox.Checked && !modifiers.noFail && !modifiers.instaFail;
-            //     modifiers.fastNotes = fastNotesCheckbox.Checked;
-            //     modifiers.songSpeed = fastSongCheckbox.Checked ?
-            //         GameplayModifiers.SongSpeed.Faster :
-            //         slowSongCheckbox.Checked ? 
-            //             GameplayModifiers.SongSpeed.Slower :
-            //             GameplayModifiers.SongSpeed.Normal;
-            //     modifiers.disappearingArrows = disappearingArrowsCheckbox.Checked && !ghostNotesCheckbox.Checked;
-            //     modifiers.ghostNotes = ghostNotesCheckbox.Checked;
-            //
-            //     var characteristic = currentSelection.Characteristics.First(x => x.SerializedName == characteristicDropdown.SelectedItem as string);
-            //
-            //     var playSong = new PlaySong();
-            //     playSong.characteristic = new Characteristic();
-            //     playSong.characteristic.SerializedName = characteristic.SerializedName;
-            //     playSong.difficulty = (Characteristic.BeatmapDifficulty)Enum.Parse(typeof(Characteristic.BeatmapDifficulty), difficultyDropdown.SelectedItem.ToString());
-            //     playSong.gameplayModifiers = modifiers;
-            //     playSong.playerSettings = playerSettings;
-            //     playSong.levelId = currentSelection.LevelId;
-            //
-            //     server.Send(new Packet(playSong).ToBytes());
-            // }
-
-            var playerSettings = new PPPlayerSpecificSettings();
-            playerSettings.leftHanded = mirrorCheckbox.Checked;
-            playerSettings.staticLights = staticLightsCheckbox.Checked;
-            playerSettings.noTextsAndHuds = noHudCheckbox.Checked;
-            playerSettings.advancedHud = advancedHudCheckbox.Checked;
-            playerSettings.reduceDebris = reduceDebrisCheckbox.Checked;
-
-            var modifiers = new PPGameplayModifiers();
-            modifiers.noFail = noFailCheckbox.Checked;
-            modifiers.noBombs = noBombsCheckbox.Checked;
-            modifiers.noObstacles = noWallsCheckbox.Checked;
-            modifiers.instaFail = instaFailCheckbox.Checked && !modifiers.noFail;
-            modifiers.failOnSaberClash = failOnClashCheckbox.Checked;
-            modifiers.batteryEnergy = batteryEnergyCheckbox.Checked && !modifiers.noFail && !modifiers.instaFail;
-            modifiers.fastNotes = fastNotesCheckbox.Checked;
-            modifiers.songSpeed = fastSongCheckbox.Checked ? PPGameplayModifiers.SongSpeed.Faster :
-                slowSongCheckbox.Checked ? PPGameplayModifiers.SongSpeed.Slower :
-                PPGameplayModifiers.SongSpeed.Normal;
-            modifiers.disappearingArrows = disappearingArrowsCheckbox.Checked && !ghostNotesCheckbox.Checked;
-            modifiers.ghostNotes = ghostNotesCheckbox.Checked;
-
-            var characteristic = currentSelection.Characteristics.First(x =>
-                x.SerializedName == characteristicDropdown.SelectedItem as string);
-
-            var playSong = new PlaySong();
-            playSong.ppCharacteristic = new PPCharacteristic();
-            playSong.ppCharacteristic.SerializedName = characteristic.SerializedName;
-            // playSong.difficulty =
-            //     (Characteristic.BeatmapDifficulty) Enum.Parse(typeof(Characteristic.BeatmapDifficulty),
-            //         difficultyDropdown.SelectedItem.ToString());
-            playSong.ppGameplayModifiers = modifiers;
-            playSong.ppPlayerSettings = playerSettings;
-            playSong.levelId = runSong.Text;
-
-            server.Send(new Packet(playSong).ToBytes());
+            if (songListView.SelectedItems.Count > 0 && difficultyDropdown.SelectedIndex >= 0)
+            {
+                var playerSettings = new PPPlayerSpecificSettings();
+                playerSettings.leftHanded = mirrorCheckbox.Checked;
+                playerSettings.staticLights = staticLightsCheckbox.Checked;
+                playerSettings.noTextsAndHuds = noHudCheckbox.Checked;
+                playerSettings.advancedHud = advancedHudCheckbox.Checked;
+                playerSettings.reduceDebris = reduceDebrisCheckbox.Checked;
+            
+                var modifiers = new PPGameplayModifiers();
+                modifiers.noFail = noFailCheckbox.Checked;
+                modifiers.noBombs = noBombsCheckbox.Checked;
+                modifiers.noObstacles = noWallsCheckbox.Checked;
+                modifiers.instaFail = instaFailCheckbox.Checked && !modifiers.noFail;
+                modifiers.failOnSaberClash = failOnClashCheckbox.Checked;
+                modifiers.batteryEnergy = batteryEnergyCheckbox.Checked && !modifiers.noFail && !modifiers.instaFail;
+                modifiers.fastNotes = fastNotesCheckbox.Checked;
+                modifiers.songSpeed = fastSongCheckbox.Checked ?
+                    PPGameplayModifiers.SongSpeed.Faster :
+                    slowSongCheckbox.Checked ? 
+                        PPGameplayModifiers.SongSpeed.Slower :
+                        PPGameplayModifiers.SongSpeed.Normal;
+                modifiers.disappearingArrows = disappearingArrowsCheckbox.Checked && !ghostNotesCheckbox.Checked;
+                modifiers.ghostNotes = ghostNotesCheckbox.Checked;
+            
+                var characteristic = currentSelection.Characteristics.First(x => x.SerializedName == characteristicDropdown.SelectedItem as string);
+            
+                var playSong = new PlaySong();
+                playSong.characteristic = new PPCharacteristic();
+                playSong.characteristic.SerializedName = characteristic.SerializedName;
+                playSong.difficulty = (PPCharacteristic.BeatmapDifficulty)Enum.Parse(typeof(PPCharacteristic.BeatmapDifficulty), difficultyDropdown.SelectedItem.ToString());
+                playSong.gameplayModifiers = modifiers;
+                playSong.playerSettings = playerSettings;
+                playSong.levelId = currentSelection.LevelId;
+            
+                server.Send(new Packet(playSong).ToBytes());
+            }
         }
 
         private void returnToMenuButton_Click(object sender, EventArgs e)

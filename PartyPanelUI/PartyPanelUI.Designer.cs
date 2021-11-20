@@ -39,7 +39,6 @@
             this.batteryEnergyCheckbox = new System.Windows.Forms.CheckBox();
             this.failOnClashCheckbox = new System.Windows.Forms.CheckBox();
             this.instaFailCheckbox = new System.Windows.Forms.CheckBox();
-            this.runSong = new System.Windows.Forms.TextBox();
             this.negativeModifiersBox = new System.Windows.Forms.GroupBox();
             this.slowSongCheckbox = new System.Windows.Forms.CheckBox();
             this.noWallsCheckbox = new System.Windows.Forms.CheckBox();
@@ -80,7 +79,6 @@
             this.groupBox.AutoSize = true;
             this.groupBox.Controls.Add(this.characteristicDropdown);
             this.groupBox.Controls.Add(this.positiveModifierBox);
-            this.groupBox.Controls.Add(this.runSong);
             this.groupBox.Controls.Add(this.negativeModifiersBox);
             this.groupBox.Controls.Add(this.playerSettingsBox);
             this.groupBox.Controls.Add(this.returnToMenuButton);
@@ -197,14 +195,6 @@
             this.instaFailCheckbox.TabIndex = 12;
             this.instaFailCheckbox.Text = "Insta Fail";
             this.instaFailCheckbox.UseVisualStyleBackColor = true;
-            // 
-            // runSong
-            // 
-            this.runSong.Location = new System.Drawing.Point(8, 453);
-            this.runSong.Name = "runSong";
-            this.runSong.Size = new System.Drawing.Size(172, 20);
-            this.runSong.TabIndex = 2;
-            this.runSong.Visible = true;
             // 
             // negativeModifiersBox
             // 
@@ -418,8 +408,6 @@
             this.ResumeLayout(false);
             this.PerformLayout();
         }
-
-        private System.Windows.Forms.TextBox runSong;
 
         #endregion
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using PartyPanel.Shared;
 using PartyPanel.Shared.Models;
 using UnityEngine;
@@ -33,26 +34,26 @@ namespace PartyPanel.Utilities
                 );
             };
         
-            // if ((level is PreviewBeatmapLevelSO && await HasDLCLevel(level.levelID)) ||
-            //             level is CustomPreviewBeatmapLevel)
-            // {
-            //     Shared.Logger.Debug("Loading DLC/Custom level...");
-            //     var result = await GetLevelFromPreview(level);
-            //     if (result != null && !(result?.isError == true))
-            //     {
-            //         SongLoaded(result?.beatmapLevel);
-            //     }
-            // }
-            //else if (level is BeatmapLevelSO)
-            if (level is BeatmapLevelSO)
+             // if ((level is PreviewBeatmapLevelSO && await HasDLCLevel(level.levelID)) ||
+             //             level is CustomPreviewBeatmapLevel)
+              if (level is CustomPreviewBeatmapLevel)
+             {
+                 Shared.PPLogger.Debug("Loading DLC/Custom level...");
+                 var result = await GetLevelFromPreview(level);
+                 if (result != null && !(result?.isError == true))
+                 {
+                     SongLoaded(result?.beatmapLevel);
+                 }
+             }
+            else if (level is BeatmapLevelSO)
             {
                 PPLogger.Debug("Reading OST data without songloader...");
                 SongLoaded(level as IBeatmapLevel);
             }
-            // else
-            // {
-            //     Logger.Debug($"Skipping unowned DLC ({level.songName})");
-            // }
+            else
+            {
+                PPLogger.Debug($"Skipping unowned DLC ({level.songName})");
+            }
         }
     
         public static void ReturnToMenu()
@@ -149,27 +150,27 @@ namespace PartyPanel.Utilities
         //     return false;
         // }
     
-        // public static async Task<BeatmapLevelsModelSO.GetBeatmapLevelResult?> GetLevelFromPreview(IPreviewBeatmapLevel level, BeatmapLevelsModelSO beatmapLevelsModel = null)
-        // {
-        //     beatmapLevelsModel = beatmapLevelsModel ?? Resources.FindObjectsOfTypeAll<BeatmapLevelsModelSO>().FirstOrDefault();
-        //
-        //     if (beatmapLevelsModel != null)
-        //     {
-        //         getLevelCancellationTokenSource?.Cancel();
-        //         getLevelCancellationTokenSource = new CancellationTokenSource();
-        //
-        //         var token = getLevelCancellationTokenSource.Token;
-        //
-        //         BeatmapLevelsModelSO.GetBeatmapLevelResult? result = null;
-        //         try
-        //         {
-        //             result = await beatmapLevelsModel.GetBeatmapLevelAsync(level.levelID, token);
-        //         }
-        //         catch (OperationCanceledException) { }
-        //         if (result?.isError == true || result?.beatmapLevel == null) return null; //Null out entirely in case of error
-        //         return result;
-        //     }
-        //     return null;
-        // }
+        public static async Task<BeatmapLevelsModel.GetBeatmapLevelResult?> GetLevelFromPreview(IPreviewBeatmapLevel level, BeatmapLevelsModel beatmapLevelsModel = null)
+        {
+            beatmapLevelsModel = beatmapLevelsModel ?? Resources.FindObjectsOfTypeAll<BeatmapLevelsModel>().FirstOrDefault();
+        
+            if (beatmapLevelsModel != null)
+            {
+                getLevelCancellationTokenSource?.Cancel();
+                getLevelCancellationTokenSource = new CancellationTokenSource();
+        
+                var token = getLevelCancellationTokenSource.Token;
+        
+                BeatmapLevelsModel.GetBeatmapLevelResult? result = null;
+                try
+                {
+                    result = await beatmapLevelsModel.GetBeatmapLevelAsync(level.levelID, token);
+                }
+                catch (OperationCanceledException) { }
+                if (result?.isError == true || result?.beatmapLevel == null) return null; //Null out entirely in case of error
+                return result;
+            }
+            return null;
+        }
     }
 }

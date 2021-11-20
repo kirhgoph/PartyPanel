@@ -6,9 +6,9 @@ namespace PartyPanel.Shared.Models.Packets
     public class PlaySong
     {
         public string levelId;
-        public PPCharacteristic ppCharacteristic;
+        public PPCharacteristic characteristic;
         public PPCharacteristic.BeatmapDifficulty difficulty;
-        public PPPlayerSpecificSettings ppPlayerSettings;
-        public PPGameplayModifiers ppGameplayModifiers;
+        public PPPlayerSpecificSettings playerSettings;
+        public PPGameplayModifiers gameplayModifiers;
     }
 }

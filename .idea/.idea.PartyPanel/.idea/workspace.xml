@@ -5,36 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="049f2caa-ef5d-4446-a30d-9df15b1f6d15" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/CustomSerializationBinder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/PPCharacteristic.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/PPGameplayModifiers.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/PPPreviewBeatmapLevel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/Command.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/LoadSong.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/LoadedSong.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/PlaySong.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/SongList.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/PlayerSpecificSettnigs.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/PPLogger.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Packet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/CustomSerializationBinder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/CustomSerializationBinder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Directory.Build.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/PPCharacteristic.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/PPCharacteristic.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/PPGameplayModifiers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/PPGameplayModifiers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/PPPreviewBeatmapLevel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/PPPreviewBeatmapLevel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/Packets/Command.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/Command.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/Packets/LoadSong.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/LoadSong.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/Packets/LoadedSong.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/LoadedSong.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/Packets/PlaySong.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/PlaySong.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/Packets/SongList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/SongList.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Models/PlayerSpecificSettnigs.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/PlayerSpecificSettnigs.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/PPLogger.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/PPLogger.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/Packet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Packet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/PartyPanel.Shared.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.Shared/PartyPanel.Shared.csproj.user" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel.sln" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanel/PartyPanel.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/PartyPanel.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PartyPanelUI/PartyPanelUI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanelUI/PartyPanelUI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.PartyPanel/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.PartyPanel/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyPanel/Client.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Client.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/PlaySong.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/PlaySong.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyPanel/Utilities/SaberUtilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanel/Utilities/SaberUtilities.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyPanelUI/PartyPanelUI.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanelUI/PartyPanelUI.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyPanelUI/PartyPanelUI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanelUI/PartyPanelUI.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/PlaySong.cs" beforeDir="false" afterPath="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/PlaySong.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +21,64 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/70/abdb83eb/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/0a/060dcb65/Delegate.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/49/88429c8b/AsyncTaskMethodBuilder`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/6a/9365dacc/Task`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1307C473-EFB6-4193-AC77-F69250CF4916/6f/94ee986a/CustomBeatmapLevelCollection.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/f4/1197fbc0/ThreadPoolWorkQueue.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/ce/369cb0b6/AwaitTaskContinuation.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://H:/C#/BeatSaber/PartyPanel/PartyPanelUI/Shared/Models/Packets/PlaySong.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3E769584-07E8-446B-830A-10AECCA29C4C/35/1f62ff84/Loader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/75/680b94ff/Task.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/a0/eb19b260/AsyncVoidMethodBuilder.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/7e/53c185a4/SynchronizationContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/EAE584CE-26BC-4022-9C1B-1AA476BFA589/06/fdb7a4bd/AsyncMethodBuilderCore.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/351E49E2-A5BF-4FD6-BEAB-B458CE2255F3/d4/e055e298/Enumerable.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1307C473-EFB6-4193-AC77-F69250CF4916/5c/0cd5d405/BeatmapLevelSO.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1307C473-EFB6-4193-AC77-F69250CF4916/b8/25484054/BeatmapLevelsModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1307C473-EFB6-4193-AC77-F69250CF4916/73/23cb716b/IPreviewBeatmapLevel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1307C473-EFB6-4193-AC77-F69250CF4916/f6/2fdb1e9d/CustomLevelLoader.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1307C473-EFB6-4193-AC77-F69250CF4916/bb/365665d9/StandardLevelReturnToMenuController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1307C473-EFB6-4193-AC77-F69250CF4916/4a/1889039e/IBeatmapLevel.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <changedPaths>
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/SongListDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/PlaySongDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/LoadSongDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/LoadedSongDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/CommandDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/CommandDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/LoadSongDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/PlaySongDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/SongListDto.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/SongList.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/LoadSong.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/LoadedSong.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/Command.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/SongList.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/LoadSong.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/LoadedSong.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/Command.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/Shared/Models/Packets/PlaySong.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/PartyPanelUI.cs" />
+      <option value="$PROJECT_DIR$/PartyPanelUI/PartyPanelUI.Designer.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Shared/Models/Packets/PlaySong.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Client.cs" />
+      <option value="$PROJECT_DIR$/PartyPanel/Utilities/SaberUtilities.cs" />
+    </changedPaths>
   </component>
   <component name="ProjectId" id="219jqn0elJRTPgDPKNfVlXXb645" />
   <component name="ProjectViewState">
@@ -64,8 +99,18 @@
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
-  <component name="RunManager" selected="Mono Remote.Unnamed">
-    <configuration name="Unnamed" type="ConnectRemote" factoryName="Mono Remote" nameIsGenerated="true" show_console_on_std_err="false" show_console_on_std_out="false" port="10000" address="localhost">
+  <component name="RunManager" selected="Compound.All">
+    <configuration name="All" type="CompoundRunConfigurationType">
+      <toRun name="Mono" type="ConnectRemote" />
+      <toRun name="PartyPanelUI" type="DotNetProject" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="CompoundRunConfigurationType">
+      <toRun name="Unnamed" type="ConnectRemote" />
+      <toRun name="PartyPanelUI" type="DotNetProject" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Mono" type="ConnectRemote" factoryName="Mono Remote" show_console_on_std_err="false" show_console_on_std_out="false" port="10000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="true" />
       <option name="selectedOptions">
@@ -101,7 +146,8 @@
     </configuration>
     <list>
       <item itemvalue=".NET Project.PartyPanelUI" />
-      <item itemvalue="Mono Remote.Unnamed" />
+      <item itemvalue="Compound.All" />
+      <item itemvalue="Mono Remote.Mono" />
     </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -112,7 +158,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1637360391233</updated>
-      <workItem from="1637360399897" duration="749000" />
+      <workItem from="1637360399897" duration="945000" />
+      <workItem from="1637400102436" duration="648000" />
+      <workItem from="1637400821040" duration="79000" />
+      <workItem from="1637400917786" duration="5115000" />
+      <workItem from="1637425004290" duration="3065000" />
     </task>
     <task id="LOCAL-00001">
       <created>1637360833056</created>
@@ -121,7 +171,14 @@
       <option name="project" value="LOCAL" />
       <updated>1637360833056</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="destroy shared">
+      <created>1637361189920</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1637361189920</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -137,26 +194,106 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="destroy shared" />
+    <option name="LAST_COMMIT_MESSAGE" value="destroy shared" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/PartyPanel/Plugin.cs</url>
-          <line>52</line>
-          <properties documentPath="H:\C#\BeatSaber\PartyPanel\PartyPanel\Plugin.cs" initialLine="52" containingFunctionPresentation="lambda expression inside method 'OnApplicationStart'">
+          <url>file://$PROJECT_DIR$/PartyPanel/Client.cs</url>
+          <line>197</line>
+          <properties documentPath="H:\C#\BeatSaber\PartyPanel\PartyPanel\Client.cs" initialLine="197" containingFunctionPresentation="method 'LoadSong'">
             <startOffsets>
-              <option value="2705" />
+              <option value="8717" />
             </startOffsets>
             <endOffsets>
-              <option value="2742" />
+              <option value="8756" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/PartyPanel/Client.cs</url>
+          <line>167</line>
+          <properties documentPath="H:\C#\BeatSaber\PartyPanel\PartyPanel\Client.cs" initialLine="167" containingFunctionPresentation="method 'Client_PacketRecieved'">
+            <startOffsets>
+              <option value="7396" />
+            </startOffsets>
+            <endOffsets>
+              <option value="7447" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/PartyPanel/Client.cs</url>
+          <line>133</line>
+          <properties documentPath="H:\C#\BeatSaber\PartyPanel\PartyPanel\Client.cs" initialLine="133" containingFunctionPresentation="method 'Client_PacketRecieved'">
+            <startOffsets>
+              <option value="5610" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5733" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/PartyPanel/Client.cs</url>
+          <line>109</line>
+          <properties documentPath="H:\C#\BeatSaber\PartyPanel\PartyPanel\Client.cs" initialLine="109" containingFunctionPresentation="method 'Client_PacketRecieved'">
+            <startOffsets>
+              <option value="3483" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3567" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/PartyPanel/Client.cs</url>
+          <line>110</line>
+          <properties documentPath="H:\C#\BeatSaber\PartyPanel\PartyPanel\Client.cs" initialLine="110" containingFunctionPresentation="method 'Client_PacketRecieved'">
+            <startOffsets>
+              <option value="3584" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3745" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/PartyPanel/Client.cs</url>
+          <line>107</line>
+          <properties documentPath="H:\C#\BeatSaber\PartyPanel\PartyPanel\Client.cs" initialLine="107" containingFunctionPresentation="method 'Client_PacketRecieved'">
+            <startOffsets>
+              <option value="3399" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3453" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/PartyPanel/Utilities/SaberUtilities.cs</url>
+          <line>17</line>
+          <properties documentPath="H:\C#\BeatSaber\PartyPanel\PartyPanel\Utilities\SaberUtilities.cs" initialLine="17" containingFunctionPresentation="method 'PlaySong'">
+            <startOffsets>
+              <option value="646" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1400" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="19" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
