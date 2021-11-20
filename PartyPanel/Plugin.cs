@@ -48,6 +48,7 @@ namespace PartyPanel
                 masterLevelList = new List<IPreviewBeatmapLevel>();
                 //masterLevelList.AddRange(_primaryLevelCollection.beatmapLevels);
                 masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.ostAndExtrasPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
+                masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.dlcBeatmapLevelPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
                 masterLevelList.AddRange(Loader.CustomLevelsCollection?.beatmapLevels ?? new IPreviewBeatmapLevel[0]);
                 
                 client.SendSongList(masterLevelList);

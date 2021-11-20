@@ -65,10 +65,10 @@
             // songListView
             // 
             this.songListView.HideSelection = false;
-            this.songListView.Location = new System.Drawing.Point(12, 38);
+            this.songListView.Location = new System.Drawing.Point(12, 74);
             this.songListView.MultiSelect = false;
             this.songListView.Name = "songListView";
-            this.songListView.Size = new System.Drawing.Size(573, 565);
+            this.songListView.Size = new System.Drawing.Size(573, 529);
             this.songListView.TabIndex = 0;
             this.songListView.UseCompatibleStateImageBehavior = false;
             this.songListView.SelectedIndexChanged += new System.EventHandler(this.songListView_SelectedIndexChangedAsync);
@@ -358,7 +358,6 @@
             this.searchBox.Name = "searchBox";
             this.searchBox.Size = new System.Drawing.Size(172, 20);
             this.searchBox.TabIndex = 2;
-            this.searchBox.Visible = true;
             this.searchBox.TextChanged += new System.EventHandler(this.searchBox_TextChanged);
             // 
             // searchLabel
@@ -398,7 +397,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PartyPanel_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.PartyPanel_FormClosed);
             this.groupBox.ResumeLayout(false);
-            this.groupBox.PerformLayout();
             this.positiveModifierBox.ResumeLayout(false);
             this.positiveModifierBox.PerformLayout();
             this.negativeModifiersBox.ResumeLayout(false);

@@ -62,24 +62,6 @@
         <e p="Properties" t="Include">
           <e p="AssemblyInfo.cs" t="Include" />
         </e>
-        <e p="Shared" t="Include">
-          <e p="CustomSerializationBinder.cs" t="Include" />
-          <e p="Models" t="Include">
-            <e p="Packets" t="Include">
-              <e p="Command.cs" t="Include" />
-              <e p="LoadedSong.cs" t="Include" />
-              <e p="LoadSong.cs" t="Include" />
-              <e p="PlaySong.cs" t="Include" />
-              <e p="SongList.cs" t="Include" />
-            </e>
-            <e p="PlayerSpecificSettnigs.cs" t="Include" />
-            <e p="PPCharacteristic.cs" t="Include" />
-            <e p="PPGameplayModifiers.cs" t="Include" />
-            <e p="PPPreviewBeatmapLevel.cs" t="Include" />
-          </e>
-          <e p="Packet.cs" t="Include" />
-          <e p="PPLogger.cs" t="Include" />
-        </e>
       </e>
     </e>
   </component>
