@@ -45,13 +45,15 @@ namespace PartyPanel
                 // if (_tertiaryLevelCollection == null) _tertiaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[2].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
                 // if (_extrasLevelCollection == null) _extrasLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[3].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
                 
+                var  favoriteIds = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault()?.playerData.favoritesLevelIds;
                 masterLevelList = new List<IPreviewBeatmapLevel>();
                 //masterLevelList.AddRange(_primaryLevelCollection.beatmapLevels);
+                masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.ostAndExtrasPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
                 masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.ostAndExtrasPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
                 masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.dlcBeatmapLevelPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
                 masterLevelList.AddRange(Loader.CustomLevelsCollection?.beatmapLevels ?? new IPreviewBeatmapLevel[0]);
                 
-                client.SendSongList(masterLevelList);
+                client.SendSongList(masterLevelList, favoriteIds);
             };
         }
 

@@ -79,6 +79,9 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="PlaylistManager, Version=1.5.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\..\..\..\SteamLibrary\steamapps\common\Beat Saber\Plugins\PlaylistManager.dll</HintPath>
+    </Reference>
     <Reference Include="SongCore">
       <HintPath>$(BeatSaberDir)\Plugins\SongCore.dll</HintPath>
       <Private>False</Private>

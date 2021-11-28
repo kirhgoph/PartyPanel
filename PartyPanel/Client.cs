@@ -62,7 +62,13 @@ namespace PartyPanel
                     );
 
                     var songList = new SongList();
-                    songList.Levels = subpacketList.ToArray();
+                    songList.LevelPacks = new[]
+                    {
+                        new LevelPack
+                        {
+                            Levels = subpacketList.ToArray()
+                        }
+                    };
 
                     client.Send(new Packet(songList).ToBytes());
                 }
@@ -78,7 +84,7 @@ namespace PartyPanel
             PPLogger.Debug("Server disconnected!");
         }
 
-        public void SendSongList(List<IPreviewBeatmapLevel> levels)
+        public void SendSongList(List<IPreviewBeatmapLevel> levels, HashSet<string> favoriteIds)
         {
             if (client != null && client.Connected)
             {
@@ -94,7 +100,8 @@ namespace PartyPanel
                 );
 
                 var songList = new SongList();
-                songList.Levels = subpacketList.ToArray();
+                songList.FavoriteIds = favoriteIds;
+                songList.LevelPacks[0].Levels = subpacketList.ToArray();
 
                 client.Send(new Packet(songList).ToBytes());
             }

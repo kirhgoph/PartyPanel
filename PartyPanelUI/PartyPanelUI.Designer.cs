@@ -56,19 +56,25 @@
             this.searchBox = new System.Windows.Forms.TextBox();
             this.searchLabel = new System.Windows.Forms.Label();
             this.artBox = new System.Windows.Forms.CheckBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.AllPage = new System.Windows.Forms.TabPage();
+            this.OSTPage = new System.Windows.Forms.TabPage();
+            this.DLCPage = new System.Windows.Forms.TabPage();
+            this.CustomPage = new System.Windows.Forms.TabPage();
             this.groupBox.SuspendLayout();
             this.positiveModifierBox.SuspendLayout();
             this.negativeModifiersBox.SuspendLayout();
             this.playerSettingsBox.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
             // songListView
             // 
             this.songListView.HideSelection = false;
-            this.songListView.Location = new System.Drawing.Point(12, 74);
+            this.songListView.Location = new System.Drawing.Point(110, 265);
             this.songListView.MultiSelect = false;
             this.songListView.Name = "songListView";
-            this.songListView.Size = new System.Drawing.Size(573, 529);
+            this.songListView.Size = new System.Drawing.Size(391, 305);
             this.songListView.TabIndex = 0;
             this.songListView.UseCompatibleStateImageBehavior = false;
             this.songListView.SelectedIndexChanged += new System.EventHandler(this.songListView_SelectedIndexChangedAsync);
@@ -382,11 +388,68 @@
             this.artBox.UseVisualStyleBackColor = true;
             this.artBox.CheckedChanged += new System.EventHandler(this.artBox_CheckedChanged);
             // 
+            // tabControl1
+            // 
+            this.tabControl1.Controls.Add(this.AllPage);
+            this.tabControl1.Controls.Add(this.OSTPage);
+            this.tabControl1.Controls.Add(this.DLCPage);
+            this.tabControl1.Controls.Add(this.CustomPage);
+            this.tabControl1.Location = new System.Drawing.Point(15, 51);
+            this.tabControl1.Multiline = true;
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(344, 212);
+            this.tabControl1.TabIndex = 5;
+            // 
+            // AllPage
+            // 
+            this.AllPage.Controls.Add(songListView);
+            this.AllPage.Location = new System.Drawing.Point(4, 22);
+            this.AllPage.Name = "AllPage";
+            this.AllPage.Padding = new System.Windows.Forms.Padding(3);
+            this.AllPage.Size = new System.Drawing.Size(336, 186);
+            this.AllPage.TabIndex = 0;
+            this.AllPage.Text = "All";
+            this.AllPage.UseVisualStyleBackColor = true;
+            this.AllPage.Click += new System.EventHandler(this.tabPage1_Click);
+            // 
+            // OSTPage
+            // 
+            this.OSTPage.Controls.Add(songListView);
+            this.OSTPage.Location = new System.Drawing.Point(4, 22);
+            this.OSTPage.Name = "OSTPage";
+            this.OSTPage.Padding = new System.Windows.Forms.Padding(3);
+            this.OSTPage.Size = new System.Drawing.Size(336, 186);
+            this.OSTPage.TabIndex = 1;
+            this.OSTPage.Text = "OST";
+            this.OSTPage.UseVisualStyleBackColor = true;
+            // 
+            // DLCPage
+            // 
+            this.DLCPage.Controls.Add(songListView);
+            this.DLCPage.Location = new System.Drawing.Point(4, 22);
+            this.DLCPage.Name = "DLCPage";
+            this.DLCPage.Size = new System.Drawing.Size(336, 186);
+            this.DLCPage.TabIndex = 2;
+            this.DLCPage.Text = "DLC";
+            this.DLCPage.UseVisualStyleBackColor = true;
+            // 
+            // CustomPage
+            // 
+            this.CustomPage.Controls.Add(songListView);
+            this.CustomPage.Location = new System.Drawing.Point(4, 22);
+            this.CustomPage.Name = "CustomPage";
+            this.CustomPage.Size = new System.Drawing.Size(336, 186);
+            this.CustomPage.TabIndex = 3;
+            this.CustomPage.Text = "Custom";
+            this.CustomPage.UseVisualStyleBackColor = true;
+            // 
             // PartyPanelUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(786, 613);
+            this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.artBox);
             this.Controls.Add(this.searchLabel);
             this.Controls.Add(this.searchBox);
@@ -403,9 +466,13 @@
             this.negativeModifiersBox.PerformLayout();
             this.playerSettingsBox.ResumeLayout(false);
             this.playerSettingsBox.PerformLayout();
+            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
+
+        private System.Windows.Forms.TabPage AllPage;
 
         #endregion
 
@@ -437,5 +504,9 @@
         private System.Windows.Forms.CheckBox artBox;
         private System.Windows.Forms.CheckBox ghostNotesCheckbox;
         private System.Windows.Forms.ComboBox characteristicDropdown;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage OSTPage;
+        private System.Windows.Forms.TabPage DLCPage;
+        private System.Windows.Forms.TabPage CustomPage;
     }
 }

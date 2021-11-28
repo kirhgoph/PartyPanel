@@ -2,23 +2,24 @@
 using System.Linq;
 using PartyPanel.Shared;
 using PartyPanel.Shared.Models.Packets;
+using WpfApp2;
 
 namespace PartyPanelUI
 {
     public class PartyPanel
     {
-        private PartyPanelUI _panelUi;
+        private MainWindow _mainWindow;
         private Network.Server server;
 
-        public PartyPanel(PartyPanelUI panelUi)
+        public PartyPanel(MainWindow panelUi)
         {
-            this._panelUi = panelUi;
+            this._mainWindow = panelUi;
         }
 
         public void Start()
         {
             server = new Network.Server(10155);
-            _panelUi.SetServer(server);
+            _mainWindow.SetServer(server);
             server.PacketRecieved += Server_PacketRecieved;
             server.PlayerConnected += Server_PlayerConnected;
             server.PlayerDisconnected += Server_PlayerDisconnected;
@@ -28,7 +29,7 @@ namespace PartyPanelUI
         private void Server_PlayerDisconnected(NetworkPlayer obj)
         {
             PPLogger.Debug("Player Disconnected!");
-            _panelUi.DisableSongList();
+            _mainWindow.DisableSongList();
         }
 
         private void Server_PlayerConnected(NetworkPlayer obj)
@@ -41,12 +42,12 @@ namespace PartyPanelUI
             if (packet.Type == PacketType.SongList)
             {
                 SongList masterLevelCollection = packet.SpecificPacket as SongList;
-                _panelUi.PopulatePartyPanel(masterLevelCollection.LevelPacks.SelectMany(x => x.Levels).ToList());
+                _mainWindow.PopulatePartyPanel(masterLevelCollection.LevelPacks.SelectMany(x => x.Levels).ToList());
             }
             else if (packet.Type == PacketType.LoadedSong)
             {
                 LoadedSong loadedSong = packet.SpecificPacket as LoadedSong;
-                _panelUi.SongLoaded(loadedSong.level);
+                _mainWindow.SongLoaded(loadedSong.level);
             }
         }
     }
