@@ -9,16 +9,24 @@ namespace PartyPanel.Shared.Models.Packets
     {
         public HashSet<string> FavoriteIds { get; set; }
         
+        public PPLevelPacksCollection[] LevelPacksCollection { get; set; }
+    }
+
+    [Serializable]
+    public class PPLevelPacksCollection
+    {
+        public int Number { get; set; }
+        
         public LevelPack[] LevelPacks { get; set; }
     }
 
     [Serializable]
     public class LevelPack
     {
+        public string PackId { get; set; }
+        
         public string PackName { get; set; }
         
-        public string CoverImage { get; set; }
-        
-        public PPPreviewBeatmapLevel[] Levels { get; set; }
+        public byte[] CoverImage { get; set; }
     }
 }

@@ -1,8 +1,13 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using IPA;
 using SongCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Newtonsoft.Json;
+using PartyPanel.Shared.Models;
+using PartyPanel.Shared.Models.Packets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -20,14 +25,9 @@ namespace PartyPanel
     {
         public string Name => "PartyPanel";
         public string Version => "0.0.1";
-
-        private AlwaysOwnedContentSO _alwaysOwnedContent;
-        private BeatmapLevelCollectionSO _primaryLevelCollection;
-        private BeatmapLevelCollectionSO _secondaryLevelCollection;
-        private BeatmapLevelCollectionSO _tertiaryLevelCollection;
-        private BeatmapLevelCollectionSO _extrasLevelCollection;
         
-        public static List<IPreviewBeatmapLevel> masterLevelList;
+        public static List<PPPreviewBeatmapLevel> masterLevelList = new List<PPPreviewBeatmapLevel>();
+        public static List<IPreviewBeatmapLevel> rawMasterLevelList = new List<IPreviewBeatmapLevel>();
 
         private Client client;
 
@@ -39,46 +39,47 @@ namespace PartyPanel
 
             Loader.SongsLoadedEvent += (Loader l, ConcurrentDictionary<string, CustomPreviewBeatmapLevel> d) =>
             {
-                if (_alwaysOwnedContent == null) _alwaysOwnedContent = Resources.FindObjectsOfTypeAll<AlwaysOwnedContentSO>().First();
-                // if (_primaryLevelCollection == null) _primaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[0].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
-                // if (_secondaryLevelCollection == null) _secondaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[1].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
-                // if (_tertiaryLevelCollection == null) _tertiaryLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[2].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
-                // if (_extrasLevelCollection == null) _extrasLevelCollection = _alwaysOwnedContent.alwaysOwnedPacks.First(x => x.packID == OstHelper.packs[3].PackID).beatmapLevelCollection as BeatmapLevelCollectionSO;
-                
-                var  favoriteIds = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault()?.playerData.favoritesLevelIds;
-                masterLevelList = new List<IPreviewBeatmapLevel>();
-                //masterLevelList.AddRange(_primaryLevelCollection.beatmapLevels);
-                masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.ostAndExtrasPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
-                masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.ostAndExtrasPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
-                masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.dlcBeatmapLevelPackCollection.beatmapLevelPacks.SelectMany(x => x.beatmapLevelCollection.beatmapLevels));
-                masterLevelList.AddRange(Loader.CustomLevelsCollection?.beatmapLevels ?? new IPreviewBeatmapLevel[0]);
-                
-                client.SendSongList(masterLevelList, favoriteIds);
+                var favoriteIds = Resources.FindObjectsOfTypeAll<PlayerDataModel>().FirstOrDefault()?.playerData
+                    .favoritesLevelIds;
+                var packsList = new List<LevelPack>();
+                masterLevelList.AddRange(
+                    Loader.BeatmapLevelsModelSO.ostAndExtrasPackCollection.beatmapLevelPacks.SelectMany(
+                        x =>
+                        {
+                            packsList.Add(new LevelPack
+                            {
+                                PackId = x.packID,
+                                PackName = x.packName,
+                                CoverImage = x.coverImage.texture.EncodeToPNG()
+                            });
+                            return x.beatmapLevelCollection.ExtractLevels(PPCollection.OST, x.packID);
+                        }));
+                masterLevelList.AddRange(Loader.BeatmapLevelsModelSO.dlcBeatmapLevelPackCollection.beatmapLevelPacks.SelectMany(
+                    x => x.beatmapLevelCollection.ExtractLevels(PPCollection.DLC, x.packID)));
+                masterLevelList.AddRange(Loader.CustomLevelsCollection.ExtractLevels(PPCollection.Custom, ""));
+
+                client.SendSongList(masterLevelList, packsList, favoriteIds);
             };
         }
+    }
 
-        public void OnApplicationQuit()
+    public static class Extensions
+    {
+        public static IEnumerable<PPPreviewBeatmapLevel> ExtractLevels(this IBeatmapLevelCollection levelsCollection, PPCollection collectionType, string packId)
         {
-        }
-
-        public void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
-        {
-        }
-
-        public void OnSceneUnloaded(Scene scene)
-        {
-        }
-
-        public void OnActiveSceneChanged(Scene prevScene, Scene nextScene)
-        {
-        }
-
-        public void OnUpdate()
-        {
-        }
-
-        public void OnFixedUpdate()
-        {
+            Plugin.rawMasterLevelList.AddRange(levelsCollection.beatmapLevels ?? new IPreviewBeatmapLevel[0]);
+            return levelsCollection.beatmapLevels?
+                .Select(
+                    y => new PPPreviewBeatmapLevel
+                    {
+                        LevelId = y.levelID,
+                        SongAuthorName = y.songAuthorName,
+                        Name = y.songName,
+                        SongSubname = y.songSubName,
+                        CoverImage = y.GetCoverImageAsync(CancellationToken.None).Result.texture.EncodeToPNG(),
+                        CollectionType = collectionType,
+                        PackId = packId
+                    }) ?? new PPPreviewBeatmapLevel[0];
         }
     }
 }

@@ -41,7 +41,7 @@ namespace PartyPanelUI
             if (packet.Type == PacketType.SongList)
             {
                 SongList masterLevelCollection = packet.SpecificPacket as SongList;
-                _panelUi.PopulatePartyPanel(masterLevelCollection.LevelPacks.SelectMany(x => x.Levels).ToList());
+                _panelUi.PopulatePartyPanel(masterLevelCollection.LevelPacksCollection[0].LevelPacks.SelectMany(x => x.Levels).ToList());
             }
             else if (packet.Type == PacketType.LoadedSong)
             {

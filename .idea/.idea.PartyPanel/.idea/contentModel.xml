@@ -33,6 +33,7 @@
             </e>
             <e p="PlayerSpecificSettnigs.cs" t="Include" />
             <e p="PPCharacteristic.cs" t="Include" />
+            <e p="PPCollection.cs" t="Include" />
             <e p="PPGameplayModifiers.cs" t="Include" />
             <e p="PPPreviewBeatmapLevel.cs" t="Include" />
           </e>

@@ -4,7 +4,10 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CBeat_0020Saber_005CBeat_0020Saber_005FData_005CManaged_005CCore_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CBeat_0020Saber_005CBeat_0020Saber_005FData_005CManaged_005CGameplayCore_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CBeat_0020Saber_005CBeat_0020Saber_005FData_005CManaged_005CHMLib_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CBeat_0020Saber_005CBeat_0020Saber_005FData_005CManaged_005CUnityEngine_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CBeat_0020Saber_005CBeat_0020Saber_005FData_005CManaged_005CUnityEngine_002EImageConversionModule_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CBeat_0020Saber_005CLibs_005C0Harmony_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CBeat_0020Saber_005CLibs_005CNewtonsoft_002EJson_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=H_003A_005CSteamLibrary_005Csteamapps_005Ccommon_005CBeat_0020Saber_005CPlugins_005CPlaylistManager_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="H:\SteamLibrary\steamapps\common\Beat Saber\Plugins\SongCore.dll" /&gt;&#xD;
@@ -18,6 +21,7 @@
   &lt;Assembly Path="H:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\GameplayCore.dll" /&gt;&#xD;
   &lt;Assembly Path="H:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\IPA.Loader.dll" /&gt;&#xD;
   &lt;Assembly Path="H:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\HMUI.dll" /&gt;&#xD;
+  &lt;Assembly Path="H:\SteamLibrary\steamapps\common\Beat Saber\Beat Saber_Data\Managed\UnityEngine.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=PartyPanelUI_002FPartyPanelUI/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>

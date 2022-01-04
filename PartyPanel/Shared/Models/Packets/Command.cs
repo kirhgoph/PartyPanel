@@ -8,7 +8,8 @@ namespace PartyPanel.Shared.Models.Packets
         public enum CommandType
         {
             Heartbeat,
-            ReturnToMenu
+            ReturnToMenu,
+            RefreshSongs
         }
 
         public CommandType commandType;

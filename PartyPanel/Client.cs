@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Timers;
+using Newtonsoft.Json;
 using PartyPanel.Shared;
 using PartyPanel.Shared.Models;
 using PartyPanel.Shared.Models.Packets;
 using PartyPanel.Utilities;
 using SongCore;
+using Timer = System.Timers.Timer;
 
 namespace PartyPanel
 {
@@ -51,26 +55,7 @@ namespace PartyPanel
                 //Send the server the master list if we can
                 if (Plugin.masterLevelList != null)
                 {
-                    var subpacketList = new List<PPPreviewBeatmapLevel>();
-                    subpacketList.AddRange(
-                        Plugin.masterLevelList.Select(x => {
-                            var level = new PPPreviewBeatmapLevel();
-                            level.Name = x.songName;
-                            level.LevelId = x.levelID;
-                            return level;
-                        })
-                    );
-
-                    var songList = new SongList();
-                    songList.LevelPacks = new[]
-                    {
-                        new LevelPack
-                        {
-                            Levels = subpacketList.ToArray()
-                        }
-                    };
-
-                    client.Send(new Packet(songList).ToBytes());
+                    client.Send(new Packet(Plugin.masterLevelList).ToBytes());
                 }
             }
             catch (Exception e)
@@ -84,26 +69,11 @@ namespace PartyPanel
             PPLogger.Debug("Server disconnected!");
         }
 
-        public void SendSongList(List<IPreviewBeatmapLevel> levels, HashSet<string> favoriteIds)
+        public async Task SendSongList(List<PPPreviewBeatmapLevel> levels, List<LevelPack> packs, HashSet<string> favoriteIds)
         {
             if (client != null && client.Connected)
             {
-                var subpacketList = new List<PPPreviewBeatmapLevel>();
-                subpacketList.AddRange(
-                    levels.Select(x =>
-                    {
-                        var level = new PPPreviewBeatmapLevel();
-                        level.LevelId = x.levelID;
-                        level.Name = x.songName;
-                        return level;
-                    })
-                );
-
-                var songList = new SongList();
-                songList.FavoriteIds = favoriteIds;
-                songList.LevelPacks[0].Levels = subpacketList.ToArray();
-
-                client.Send(new Packet(songList).ToBytes());
+                client.Send(new Packet((levels, packs, favoriteIds)).ToBytes());
             }
             else PPLogger.Debug("Skipped sending songs because there is no server connected");
         }
@@ -114,7 +84,7 @@ namespace PartyPanel
             {
                 PlaySong playSong = packet.SpecificPacket as PlaySong;
             
-                var desiredLevel = Plugin.masterLevelList.First(x => x.levelID == playSong.levelId);
+                var desiredLevel = Plugin.rawMasterLevelList.First(x => x.levelID == playSong.levelId);
                 var desiredCharacteristic = Loader.beatmapCharacteristicCollection.beatmapCharacteristics.First(x => x.serializedName == playSong.characteristic.SerializedName);
                 //var desiredCharacteristic = Loader.beatmapCharacteristicCollection.beatmapCharacteristics.First(x => x.serializedName == playSong.ppCharacteristic.SerializedName);
                 var desiredDifficulty = (BeatmapDifficulty)playSong.difficulty;
@@ -125,7 +95,7 @@ namespace PartyPanel
                 // playerSpecificSettings.noTextsAndHuds = playSong.playerSettings.noTextsAndHuds;
                 // playerSpecificSettings.reduceDebris = playSong.playerSettings.reduceDebris;
                 //playerSpecificSettings.staticLights = playSong.playerSettings.staticLights;
-            
+
                 var gameplayModifiers = new GameplayModifiers();
                 // gameplayModifiers.batteryEnergy = playSong.gameplayModifiers.batteryEnergy;
                 // gameplayModifiers.disappearingArrows = playSong.gameplayModifiers.disappearingArrows;
@@ -177,12 +147,16 @@ namespace PartyPanel
                 {
                     SaberUtilities.ReturnToMenu();
                 }
+                if (command.commandType == Command.CommandType.RefreshSongs)
+                {
+                    Loader.Instance.RefreshSongs();
+                }
             }
         }
 
         private async void LoadSong(string levelId, Action<IBeatmapLevel> loadedCallback)
         {
-            IPreviewBeatmapLevel level = Plugin.masterLevelList.First(x => x.levelID == levelId);
+            IPreviewBeatmapLevel level = Plugin.rawMasterLevelList.First(x => x.levelID == levelId);
         
             //Load IBeatmapLevel
             if (level is PreviewBeatmapLevelSO || level is CustomPreviewBeatmapLevel)
